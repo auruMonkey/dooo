@@ -15,22 +15,28 @@ const DropdownCategory = ({ category, setUserServices, setCategoryName }) => {
   )
   const getFullName = () => {
     let fn = {}
-    if (category === "other") {
-      setCategoryName("Other")
-    } else {
-      fn = settingsInfo[0].mainServices.find((o) => o.shortName === category)
-      if (fn !== undefined) {
-        setCategoryName(fn.name)
+    if (settingsInfo[0] !== undefined) {
+      if (category === "other") {
+        setCategoryName("Other")
       } else {
-        fn = settingsInfo[0].usersServices.find((o) => o.shortName === category)
+        fn = settingsInfo[0].mainServices.find((o) => o.shortName === category)
+        if (fn !== undefined) {
+          setCategoryName(fn.name)
+        } else {
+          fn = settingsInfo[0].usersServices.find(
+            (o) => o.shortName === category
+          )
+        }
+        setCategoryName(fn.name)
       }
-      setCategoryName(fn.name)
     }
   }
 
   useEffect(() => {
-    setUserServices(settingsInfo[0].usersServices)
-    getFullName()
+    if (settingsInfo[0] !== undefined) {
+      setUserServices(settingsInfo[0].usersServices)
+      getFullName()
+    }
   }, [category])
 
   const clickCategoryHandler = (shortName, name) => {
@@ -54,7 +60,8 @@ const DropdownCategory = ({ category, setUserServices, setCategoryName }) => {
             style={{ background: "white", maxWidth: "45rem" }}
             className='top-search w-100 border shadow'
           >
-            {settingsInfo !== undefined &&
+            {settingsInfo[0].mainServices !== undefined &&
+              settingsInfo[0].mainServices.length !== 0 &&
               settingsInfo[0].mainServices.map((ms) => (
                 <Dropdown.Item
                   key={ms.shortName}
@@ -64,14 +71,15 @@ const DropdownCategory = ({ category, setUserServices, setCategoryName }) => {
                   {ms.name}
                 </Dropdown.Item>
               ))}
-            {settingsInfo !== undefined &&
-              settingsInfo[0].usersServices.map((ms) => (
+            {settingsInfo[0].usersServices.length > 0 &&
+              settingsInfo[0].usersServices !== undefined &&
+              settingsInfo[0].usersServices.map((us) => (
                 <Dropdown.Item
-                  key={ms.shortName}
+                  key={us.shortName}
                   className='ss-dd-i'
-                  onClick={() => clickCategoryHandler(ms.shortName, ms.name)}
+                  onClick={() => clickCategoryHandler(us.shortName, us.name)}
                 >
-                  {ms.name}
+                  {us.name}
                 </Dropdown.Item>
               ))}
           </Dropdown.Menu>

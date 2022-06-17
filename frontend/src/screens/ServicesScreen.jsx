@@ -12,7 +12,7 @@ import {
   ShowCategory,
 } from "../components/serviceScreen"
 
-const ServicesScreen = () => {
+const ServicesScreen = ({ settingsInfo }) => {
   const [listView, setListView] = useState(false)
   const [userServices, setUserServices] = useState([])
   const [categoryName, setCategoryName] = useState("")
