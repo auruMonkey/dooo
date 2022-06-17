@@ -25,9 +25,9 @@ const Servicesc = () => {
     <Container>
       <Row>
         {error && <Message variant='danger'>{error}</Message>}
-        {/* {loading ? (
+        {loading ? (
           <Loader />
-        ) : settingsInfo ? (
+        ) : settingsInfo !== undefined ? (
           settingsInfo[0].mainServices.map((ms) => {
             return (
               <Col lg={chunkSize} md={6} sm={12} key={ms.shortName}>
@@ -170,7 +170,7 @@ const Servicesc = () => {
           })
         ) : (
           ""
-        )} */}
+        )}
       </Row>
     </Container>
   )
