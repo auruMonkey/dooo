@@ -1,0 +1,16 @@
+.custom-file-input.selected:lang(en)::after {
+  content: "" !important;
+}
+.custom-file {
+  overflow: hidden;
+}
+.custom-file-input {
+  white-space: nowrap;
+}
+.sus-add-image {
+  width: 3.5rem;
+  height: 3.5rem;
+  padding: 0.5rem;
+  background-color: $gray-color;
+  border-radius: 0.5rem;
+}

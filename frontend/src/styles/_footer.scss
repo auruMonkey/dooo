@@ -1,0 +1,15 @@
+.footer-main {
+  background-color: $black-color;
+  color: $white-color;
+}
+.footer-allright {
+  padding-top: 3rem;
+  font-size: 0.75rem;
+}
+.footer-email {
+  text-decoration: none;
+  color: $white-color;
+  &:hover {
+    color: $orange-color;
+  }
+}

@@ -1,0 +1,10 @@
+.top-dashboard-avatar {
+  width: 5rem;
+  height: 5rem;
+}
+.dashb-button {
+  &:focus {
+    background-color: $orange-color;
+    color: $white-color;
+  }
+}

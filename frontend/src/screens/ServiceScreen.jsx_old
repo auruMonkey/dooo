@@ -1,0 +1,200 @@
+import React, { useEffect, useState } from "react"
+import {
+  Stack,
+  Row,
+  Col,
+  Container,
+  Nav,
+  NavDropdown,
+  Button,
+  Dropdown,
+  Pagination,
+  Form,
+  FormControl,
+  InputGroup,
+} from "react-bootstrap"
+import { useDispatch, useSelector } from "react-redux"
+import { useParams } from "react-router-dom"
+import {
+  ServiceList,
+  Message,
+  Service,
+  Loader,
+  Top,
+  ServicesLineTwo,
+  SearchBox,
+} from "../components"
+import { listServices } from "../actions/serviceActions.js"
+
+const ServicesScreen = () => {
+  const [titleDM, setTitleDM] = useState("Recently Added")
+  const [listView, setListView] = useState(false)
+
+  //var for filter services
+  const { category } = useParams()
+  const { keyword } = useParams()
+
+  const dispatch = useDispatch()
+  //slice service list
+  const serviceList = useSelector((state) => state.serviceList)
+  const { loading, error, services } = serviceList
+
+  useEffect(() => {
+    dispatch(listServices(keyword, category, 1))
+  }, [dispatch, keyword, category])
+
+  const categoryName = () => {
+    switch (category) {
+      case "spa":
+        return "only Spa"
+      case "barbersalon":
+        return "only Barber and Salon Services"
+      case "grooming":
+        return "only Pet Grooming Services"
+      case "cardetails":
+        return "only Vehicle Detail Services"
+      case "health":
+        return "only Health Services"
+      case "gym":
+        return "only Gym Services"
+      case "entertainment":
+        return "only Entertainment Services"
+
+      default:
+        return "All Services"
+    }
+  }
+
+  const clickHandler = (p) => {
+    setTitleDM(p)
+  }
+  // const submitHandler = (e) => {
+  //   e.preventDefault()
+  //   dispatch(listServices(keyword, category, 1))
+  //   // dispatch(listServices(keyword, category, 1))
+  // }
+
+  return (
+    <Stack direction='vertical' style={{ backgroundColor: "white" }}>
+      <Row className='m-0 justify-content-md-center '>
+        <Top text='Mobile Services'>
+          <span className='top-slogan'>
+            Choose a mobile service to view the busniesses that are available.
+            Discover mobile services in your area!
+          </span>
+          {/* ******Serch Box******* */}
+          <SearchBox />
+
+          <Row>
+            <ServicesLineTwo />
+          </Row>
+        </Top>
+      </Row>
+
+      {loading ? (
+        <Loader />
+      ) : error ? (
+        <Message variant='danger'>{error}</Message>
+      ) : (
+        <>
+          <Container>
+            <Row style={{ color: "black" }} className='my-3'>
+              <Col lg={6} md={6} sm={12}>
+                <span>
+                  Result{" "}
+                  {services !== undefined ? services.businesses.length : 0} -
+                  Showing in {categoryName()}
+                </span>
+              </Col>
+              <Col className='d-flex justify-content-end' lg={6} md={6} sm={12}>
+                <Row>
+                  <Col lg={6} md={6} sm={12}>
+                    <div className='d-flex flex-row align-items-center my-2'>
+                      <span className='me-3'>Sort</span>
+                      <Dropdown className='me-5'>
+                        <Dropdown.Toggle className='ss-dd-t'>
+                          {titleDM}
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu style={{ background: "white" }}>
+                          <Dropdown.Item
+                            className='ss-dd-i'
+                            onClick={() => clickHandler("Recently Added")}
+                          >
+                            Recently Added
+                          </Dropdown.Item>
+                          <Dropdown.Item
+                            className='ss-dd-i'
+                            onClick={() => clickHandler("Highest Rated")}
+                          >
+                            Highest Rated
+                          </Dropdown.Item>
+                        </Dropdown.Menu>
+                      </Dropdown>
+                    </div>
+                  </Col>
+                  <Col lg={6} md={6} sm={12}>
+                    <div className='d-flex flex-row align-items-center my-2'>
+                      <span className='me-1'>View</span>
+                      <Button
+                        variant='light'
+                        className='mx-3 ss-btn'
+                        onClick={() => setListView(true)}
+                      >
+                        <i className='fa-solid fa-list'></i>
+                      </Button>
+                      <Button
+                        variant='light'
+                        className='mx-3 ss-btn'
+                        onClick={() => setListView(false)}
+                      >
+                        <i className='fa-solid fa-grip'></i>
+                      </Button>
+                    </div>
+                  </Col>
+                </Row>
+              </Col>
+            </Row>
+          </Container>
+          <hr style={{ border: "0.01rem solid black" }} />
+          <Container>
+            {!listView ? (
+              <Row>
+                {services !== undefined
+                  ? services.businesses.map((service) => (
+                      <Col key={service._id} sm={12} md={6} lg={4} xlg={3}>
+                        <Service service={service} />
+                      </Col>
+                    ))
+                  : ""}
+              </Row>
+            ) : (
+              <Row>
+                <Col sm={12} md={12} lg={6} xlg={6}>
+                  {services.businesses.map((service) => (
+                    <Col key={service._id} sm={12} md={12} lg={12} xlg={12}>
+                      <ServiceList service={service} />
+                    </Col>
+                  ))}
+                </Col>
+
+                <Col sm={12} md={12} lg={6} xlg={6}></Col>
+              </Row>
+            )}
+          </Container>
+          <hr style={{ border: "0.01rem solid black" }} />
+          <Container>
+            <div className='d-flex justify-content-center'>
+              <Pagination>
+                <Pagination.Prev />
+                <Pagination.Item>{1}</Pagination.Item>
+                <Pagination.Next />
+              </Pagination>
+            </div>
+          </Container>
+        </>
+      )}
+    </Stack>
+  )
+}
+
+export default ServicesScreen

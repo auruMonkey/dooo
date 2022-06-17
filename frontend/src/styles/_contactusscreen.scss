@@ -1,0 +1,17 @@
+.cus-contactus-notitia {
+  background-color: $orange;
+}
+.cus-contactus-text {
+  color: $white;
+}
+.cus-contactus-email {
+  text-decoration: none;
+  color: $white;
+  &:hover {
+    color: $white;
+  }
+}
+.cus-contact-form {
+  color: $black;
+  max-width: 40rem;
+}
