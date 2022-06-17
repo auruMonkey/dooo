@@ -26,7 +26,8 @@ const addSettings = asyncHandler(async (req, res) => {
       },
     }
   )
-  res.json(settings)
+  const newSettings = await Setting.findById({ _id: id })
+  res.json(newSettings)
 })
 
 export { getSettings, addSettings }
