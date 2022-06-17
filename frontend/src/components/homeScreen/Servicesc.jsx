@@ -20,6 +20,7 @@ const Servicesc = () => {
   const { loading, settingsInfo, error } = useSelector(
     (state) => state.settingsUp
   )
+  console.log(settingsInfo)
   return (
     <Container>
       <Row>
