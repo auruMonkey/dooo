@@ -3,11 +3,9 @@ import { Link, useLocation } from "react-router-dom"
 import { Row, Col, Card, Container, Image } from "react-bootstrap"
 import { useSelector } from "react-redux"
 
-import { DUMMY_SERVICES_LINE } from "../assets/dummy/dummyservices"
+import { DUMMY_SERVICES_LINE } from "../assets/dummy/dummyservices.js"
 import { useParams } from "react-router-dom"
 import { Loader, SvgIcon, Message } from "../components"
-
-
 
 export const ServicesLine = () => {
   const chunkSize = 1
