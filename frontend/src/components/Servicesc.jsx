@@ -63,7 +63,7 @@ export const ServicesLineTwo = () => {
   return (
     <Container>
       <Row className='justify-content-md-center text-center mb-4'>
-        {loading ? (
+        {!settingsInfo ? (
           <Loader />
         ) : (
           settingsInfo[0].mainServices.map((ms) => {
