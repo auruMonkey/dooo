@@ -324,14 +324,14 @@ const getBusinesses = asyncHandler(async (req, res) => {
       },
     },
   ]
-  const keywordD = [
-    {
-      businessName: {
-        $regex: category,
-        $options: "x",
-      },
-    },
-  ]
+  // const keywordD = [
+  //   {
+  //     businessName: {
+  //       $regex: category,
+  //       $options: "x",
+  //     },
+  //   },
+  // ]
 
   const count = await Business.countDocuments(keyword)
   let businesses = []
@@ -355,9 +355,7 @@ const getBusinesses = asyncHandler(async (req, res) => {
         .limit(pageSize)
         .skip(pageSize * (page - 1))
     } else {
-      businesses = await Business.find()
-        .or(keyword)
-        .or(keywordD)
+      businesses = await Business.find({ category: category })
         .limit(pageSize)
         .skip(pageSize * (page - 1))
     }

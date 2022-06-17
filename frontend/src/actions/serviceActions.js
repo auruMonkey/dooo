@@ -4,6 +4,7 @@ import axios from "axios"
 export const listServices =
   (keyword = "", category = "", pageNumber = "") =>
   async (dispatch) => {
+    console.log(category)
     try {
       dispatch({ type: "SERVICE_LIST_REQUEST" })
       //config axios
@@ -13,12 +14,6 @@ export const listServices =
         },
       }
       if (category !== "") {
-        await axios
-          .post("/api/business/all", { category, pageNumber }, config)
-          .then((response) => {
-            dispatch({ type: "SERVICE_LIST_SUCCESS", payload: response.data })
-          })
-      } else {
         await axios
           .post("/api/business/all", { category, pageNumber }, config)
           .then((response) => {

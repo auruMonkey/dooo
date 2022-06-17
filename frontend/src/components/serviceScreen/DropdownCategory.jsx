@@ -18,6 +18,7 @@ const DropdownCategory = ({ category, setUserServices, setCategoryName }) => {
     if (settingsInfo[0] !== undefined) {
       if (category === "other") {
         setCategoryName("Other")
+        setCategoryNameChosen("Other")
       } else {
         fn = settingsInfo[0].mainServices.find((o) => o.shortName === category)
         if (fn !== undefined) {

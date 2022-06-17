@@ -12,7 +12,7 @@ import {
   ShowCategory,
 } from "../components/serviceScreen"
 
-const ServicesScreen = ({ settingsInfo }) => {
+const ServicesScreen = () => {
   const [listView, setListView] = useState(false)
   const [userServices, setUserServices] = useState([])
   const [categoryName, setCategoryName] = useState("")
@@ -25,10 +25,12 @@ const ServicesScreen = ({ settingsInfo }) => {
   const dispatch = useDispatch()
   //slice service list
   const { loading, error, services } = useSelector((state) => state.serviceList)
+  /* Get setting info slice */
+  const { settingsInfo } = useSelector((state) => state.settingsUp)
 
   useEffect(() => {
     if (category === "other") {
-      dispatch(listServices(keyword, userServices, 1))
+      dispatch(listServices(keyword, settingsInfo[0].usersServices, 1))
     } else {
       dispatch(listServices(keyword, category, 1))
     }
