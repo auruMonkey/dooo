@@ -64,6 +64,7 @@ export const businessRegister =
         newCategory = await axios
           .post("/api/settings", { id, category, newName }, config)
           .then((response) => {
+            dispatch({ type: "GET_SETTINGS_SUCCESS", payload: response.data })
             localStorage.setItem("settingsInfo", JSON.stringify(response.data))
           })
       }
