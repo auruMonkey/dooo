@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { useSelector } from "react-redux"
 import { Link } from "react-router-dom"
 import {
@@ -15,19 +15,26 @@ import { hssccto, hsscctt } from "../strings.js"
 
 const Servicesc = () => {
   const [show, setShow] = useState(false)
+  const [services, setServices] = useState()
   const chunkSize = 3
-
   const { loading, settingsInfo, error } = useSelector(
     (state) => state.settingsUp
   )
+
+  useEffect(() => {
+    if (settingsInfo) {
+      setServices(() => settingsInfo[0].mainServices)
+    }
+  }, [settingsInfo])
+
   return (
     <Container>
       <Row>
         {error && <Message variant='danger'>{error}</Message>}
         {loading ? (
           <Loader />
-        ) : settingsInfo !== undefined ? (
-          settingsInfo[0].mainServices.map((ms) => {
+        ) : (
+          services.map((ms) => {
             return (
               <Col lg={chunkSize} md={6} sm={12} key={ms.shortName}>
                 {ms.shortName === "allbusinesses" ? (
@@ -167,8 +174,6 @@ const Servicesc = () => {
               </Col>
             )
           })
-        ) : (
-          ""
         )}
       </Row>
     </Container>
