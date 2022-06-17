@@ -61,8 +61,8 @@ const DropdownCategory = ({ category, setUserServices, setCategoryName }) => {
             style={{ background: "white", maxWidth: "45rem" }}
             className='top-search w-100 border shadow'
           >
-            {settingsInfo[0].mainServices !== undefined &&
-              settingsInfo[0].mainServices.length !== 0 &&
+            {settingsInfo !== null &&
+              settingsInfo !== undefined &&
               settingsInfo[0].mainServices.map((ms) => (
                 <Dropdown.Item
                   key={ms.shortName}
@@ -72,8 +72,8 @@ const DropdownCategory = ({ category, setUserServices, setCategoryName }) => {
                   {ms.name}
                 </Dropdown.Item>
               ))}
-            {settingsInfo[0].usersServices.length > 0 &&
-              settingsInfo[0].usersServices !== undefined &&
+            {settingsInfo !== null &&
+              settingsInfo !== undefined &&
               settingsInfo[0].usersServices.map((us) => (
                 <Dropdown.Item
                   key={us.shortName}
