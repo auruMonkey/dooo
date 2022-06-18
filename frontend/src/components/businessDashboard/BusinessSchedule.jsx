@@ -274,344 +274,360 @@ const BusinessSchedule = () => {
         centered
         size='lg'
       >
-        <Modal.Header closeButton>
-          <Modal.Title>Set Schedule</Modal.Title>
-        </Modal.Header>
-        <hr />
-        {openSch ? (
-          <Modal.Body className='m-0 p-0'>
-            <div className='px-3 py-2'>
-              <i
-                className='bi bi-geo-alt-fill me-2'
-                style={{ color: "orange" }}
-              ></i>
-              {openSch.location.address}
-            </div>
-            <hr className='mb-0' />
-            {/* *******Modal Start Shift ******* */}
-            <Row className='w-100 m-0 '>
-              <Col lg={6} md={5} xs={12} className='border-end m-0 p-3 '>
-                <Row>
-                  <span>Shift Start</span>
-                  <Col className='w-auto'>
-                    <Form.Group className='mt-3'>
-                      <Form.Select
-                        value={shift.starthour}
-                        onChange={(e) =>
-                          setShift((prev) => ({
-                            ...prev,
-                            starthour: e.target.value,
-                          }))
-                        }
-                      >
-                        {hours.map((i, index) => (
-                          <option key={index} value={i}>
-                            {i}
-                          </option>
-                        ))}
-                      </Form.Select>
-                    </Form.Group>
-                  </Col>
-                  <Col className='w-auto'>
-                    <Form.Group className='mt-3'>
-                      <Form.Select
-                        value={shift.startmin !== "00" ? shift.startmin : "00"}
-                        onChange={(e) =>
-                          setShift((prev) => ({
-                            ...prev,
-                            startmin: e.target.value,
-                          }))
-                        }
-                      >
-                        {min.map((i, index) => (
-                          <option key={index} value={i}>
-                            {i}
-                          </option>
-                        ))}
-                      </Form.Select>
-                    </Form.Group>
-                  </Col>
-                  <Col className='w-auto'>
-                    <Form.Group className='mt-3'>
-                      <Form.Select
-                        value={shift.starttd ? shift.starttd : td[0]}
-                        onChange={(e) =>
-                          setShift((prev) => ({
-                            ...prev,
-                            starttd: e.target.value,
-                          }))
-                        }
-                      >
-                        {td.map((i, index) => (
-                          <option key={index} value={i}>
-                            {i}
-                          </option>
-                        ))}
-                      </Form.Select>
-                    </Form.Group>
-                  </Col>
-                </Row>
-              </Col>
-              <Col lg={6} md={5} xs={12} className='border-start m-0  p-3'>
-                <Row>
-                  <span>Shift End</span>
-                  <Col className='w-auto'>
-                    <Form.Group className='mt-3'>
-                      <Form.Select
-                        value={shift.endhour !== "0" ? shift.endhour : "0"}
-                        onChange={(e) =>
-                          setShift((prev) => ({
-                            ...prev,
-                            endhour: e.target.value,
-                          }))
-                        }
-                      >
-                        {hours.map((i, index) => (
-                          <option key={index} value={i}>
-                            {i}
-                          </option>
-                        ))}
-                      </Form.Select>
-                    </Form.Group>
-                  </Col>
-                  <Col className='w-auto'>
-                    <Form.Group className='mt-3'>
-                      <Form.Select
-                        value={shift.endmin !== "00" ? shift.endmin : "00"}
-                        onChange={(e) =>
-                          setShift((prev) => ({
-                            ...prev,
-                            endmin: e.target.value,
-                          }))
-                        }
-                      >
-                        {min.map((i, index) => (
-                          <option key={index} value={i}>
-                            {i}
-                          </option>
-                        ))}
-                      </Form.Select>
-                    </Form.Group>
-                  </Col>
-                  <Col className='w-auto'>
-                    <Form.Group className='mt-3'>
-                      <Form.Select
-                        value={shift.endtd ? shift.endtd : td[0]}
-                        onChange={(e) =>
-                          setShift((prev) => ({
-                            ...prev,
-                            endtd: e.target.value,
-                          }))
-                        }
-                      >
-                        {td.map((i, index) => (
-                          <option key={index} value={i}>
-                            {i}
-                          </option>
-                        ))}
-                      </Form.Select>
-                    </Form.Group>
-                  </Col>
-                </Row>
-              </Col>
-            </Row>
-            <hr className='mt-0' />
-            <Row>
-              <div className='form-check p-2'>
-                <input
-                  className='schedule-form-check-input form-check-input ms-4'
-                  type='checkbox'
-                  checked={isLunch}
-                  name='flexRadioDefault'
-                  id='addlunch'
-                  onClick={() => setIsLunch(!isLunch)}
-                />
-                <label className='form-check-label ms-2' htmlFor='addlunch'>
-                  Add Lunch?
-                </label>
+        <div className='bg-white'>
+          <Modal.Header closeButton>
+            <Modal.Title>Set Schedule</Modal.Title>
+          </Modal.Header>
+          <hr />
+          {openSch ? (
+            <Modal.Body className='m-0 p-0'>
+              <div className='px-3 py-2'>
+                <i
+                  className='bi bi-geo-alt-fill me-2'
+                  style={{ color: "orange" }}
+                ></i>
+                {openSch.location.address}
               </div>
-            </Row>
-            <hr className='m-0' />
-            {isLunch && (
-              <>
-                <Row className='w-100 m-0'>
-                  <Col lg={6} md={5} xs={12} className='border-end m-0 p-3 '>
-                    <Row>
-                      <span>Lunch Start</span>
-                      <Col className='w-auto'>
-                        <Form.Group className='mt-3'>
-                          <Form.Select
-                            value={lunch.starthour}
-                            onChange={(e) =>
-                              setLunch((prev) => ({
-                                ...prev,
-                                starthour: e.target.value,
-                              }))
-                            }
-                          >
-                            {hours.map((i, index) => (
-                              <option key={index} value={i}>
-                                {i}
-                              </option>
-                            ))}
-                          </Form.Select>
-                        </Form.Group>
-                      </Col>
-                      <Col className='w-auto'>
-                        <Form.Group className='mt-3'>
-                          <Form.Select
-                            value={
-                              lunch.startmin !== "00" ? lunch.startmin : "00"
-                            }
-                            onChange={(e) =>
-                              setLunch((prev) => ({
-                                ...prev,
-                                startmin: e.target.value,
-                              }))
-                            }
-                          >
-                            {min.map((i, index) => (
-                              <option key={index} value={i}>
-                                {i}
-                              </option>
-                            ))}
-                          </Form.Select>
-                        </Form.Group>
-                      </Col>
-                      <Col className='w-auto'>
-                        <Form.Group className='mt-3'>
-                          <Form.Select
-                            value={lunch.starttd ? lunch.starttd : td[0]}
-                            onChange={(e) =>
-                              setLunch((prev) => ({
-                                ...prev,
-                                starttd: e.target.value,
-                              }))
-                            }
-                          >
-                            {td.map((i, index) => (
-                              <option key={index} value={i}>
-                                {i}
-                              </option>
-                            ))}
-                          </Form.Select>
-                        </Form.Group>
-                      </Col>
-                    </Row>
-                  </Col>
-                  <Col lg={6} md={5} xs={12} className='border-start m-0  p-3'>
-                    <Row>
-                      <span>Lunch End</span>
-                      <Col className='w-auto'>
-                        <Form.Group className='mt-3'>
-                          <Form.Select
-                            value={lunch.endhour !== "0" ? lunch.endhour : "0"}
-                            onChange={(e) =>
-                              setLunch((prev) => ({
-                                ...prev,
-                                endhour: e.target.value,
-                              }))
-                            }
-                          >
-                            {hours.map((i, index) => (
-                              <option key={index} value={i}>
-                                {i}
-                              </option>
-                            ))}
-                          </Form.Select>
-                        </Form.Group>
-                      </Col>
-                      <Col className='w-auto'>
-                        <Form.Group className='mt-3'>
-                          <Form.Select
-                            value={lunch.endmin !== "00" ? lunch.endmin : "00"}
-                            onChange={(e) =>
-                              setLunch((prev) => ({
-                                ...prev,
-                                endmin: e.target.value,
-                              }))
-                            }
-                          >
-                            {min.map((i, index) => (
-                              <option key={index} value={i}>
-                                {i}
-                              </option>
-                            ))}
-                          </Form.Select>
-                        </Form.Group>
-                      </Col>
-                      <Col className='w-auto'>
-                        <Form.Group className='mt-3'>
-                          <Form.Select
-                            value={lunch.endtd ? lunch.endtd : td[0]}
-                            onChange={(e) =>
-                              setLunch((prev) => ({
-                                ...prev,
-                                endtd: e.target.value,
-                              }))
-                            }
-                          >
-                            {td.map((i, index) => (
-                              <option key={index} value={i}>
-                                {i}
-                              </option>
-                            ))}
-                          </Form.Select>
-                        </Form.Group>
-                      </Col>
-                    </Row>
-                  </Col>
-                </Row>
-                <hr className='mt-0' />
-              </>
-            )}
-            <Row className='m-0  '>
-              <ListGroup horizontal>
-                <Row className='m-0 p-0'>
-                  {dw.map((d, index) => (
-                    <Col lg={1} className='w-auto mx-0' key={index}>
-                      <ListGroup.Item
-                        as='li'
-                        active={checkDaysOff(d)}
-                        className='schedule-listgroup my-2 border  rounded p-2'
-                        onClick={() => daysOffHandler(d)}
-                      >
-                        {checkDaysOff(d) && (
-                          <i
-                            className='bi bi-check-circle-fill me-1 '
-                            style={{ color: "orange" }}
-                          ></i>
-                        )}
-                        <span style={{ fontSize: "0.8rem" }}>{d}</span>
-                      </ListGroup.Item>
+              <hr className='mb-0' />
+              {/* *******Modal Start Shift ******* */}
+              <Row className='w-100 m-0 '>
+                <Col lg={6} md={5} xs={12} className='border-end m-0 p-3 '>
+                  <Row>
+                    <span>Shift Start</span>
+                    <Col className='w-auto'>
+                      <Form.Group className='mt-3'>
+                        <Form.Select
+                          value={shift.starthour}
+                          onChange={(e) =>
+                            setShift((prev) => ({
+                              ...prev,
+                              starthour: e.target.value,
+                            }))
+                          }
+                        >
+                          {hours.map((i, index) => (
+                            <option key={index} value={i}>
+                              {i}
+                            </option>
+                          ))}
+                        </Form.Select>
+                      </Form.Group>
                     </Col>
-                  ))}
-                </Row>
-              </ListGroup>
-              {/* </div> */}
-            </Row>
-            <hr className='mt-0' />
-          </Modal.Body>
-        ) : (
-          ""
-        )}
-        <Modal.Footer as='div' className='mt-auto d-flex justify-content-start'>
-          <Button
-            type='button'
-            className='shadow p-2 rounded'
-            style={{
-              color: "#3b8543",
-              fontWeight: "bold",
-              backgroundColor: "white",
-              border: "none",
-              width: "auto",
-            }}
-            onClick={setScheduleHandler}
+                    <Col className='w-auto'>
+                      <Form.Group className='mt-3'>
+                        <Form.Select
+                          value={
+                            shift.startmin !== "00" ? shift.startmin : "00"
+                          }
+                          onChange={(e) =>
+                            setShift((prev) => ({
+                              ...prev,
+                              startmin: e.target.value,
+                            }))
+                          }
+                        >
+                          {min.map((i, index) => (
+                            <option key={index} value={i}>
+                              {i}
+                            </option>
+                          ))}
+                        </Form.Select>
+                      </Form.Group>
+                    </Col>
+                    <Col className='w-auto'>
+                      <Form.Group className='mt-3'>
+                        <Form.Select
+                          value={shift.starttd ? shift.starttd : td[0]}
+                          onChange={(e) =>
+                            setShift((prev) => ({
+                              ...prev,
+                              starttd: e.target.value,
+                            }))
+                          }
+                        >
+                          {td.map((i, index) => (
+                            <option key={index} value={i}>
+                              {i}
+                            </option>
+                          ))}
+                        </Form.Select>
+                      </Form.Group>
+                    </Col>
+                  </Row>
+                </Col>
+                <Col lg={6} md={5} xs={12} className='border-start m-0  p-3'>
+                  <Row>
+                    <span>Shift End</span>
+                    <Col className='w-auto'>
+                      <Form.Group className='mt-3'>
+                        <Form.Select
+                          value={shift.endhour !== "0" ? shift.endhour : "0"}
+                          onChange={(e) =>
+                            setShift((prev) => ({
+                              ...prev,
+                              endhour: e.target.value,
+                            }))
+                          }
+                        >
+                          {hours.map((i, index) => (
+                            <option key={index} value={i}>
+                              {i}
+                            </option>
+                          ))}
+                        </Form.Select>
+                      </Form.Group>
+                    </Col>
+                    <Col className='w-auto'>
+                      <Form.Group className='mt-3'>
+                        <Form.Select
+                          value={shift.endmin !== "00" ? shift.endmin : "00"}
+                          onChange={(e) =>
+                            setShift((prev) => ({
+                              ...prev,
+                              endmin: e.target.value,
+                            }))
+                          }
+                        >
+                          {min.map((i, index) => (
+                            <option key={index} value={i}>
+                              {i}
+                            </option>
+                          ))}
+                        </Form.Select>
+                      </Form.Group>
+                    </Col>
+                    <Col className='w-auto'>
+                      <Form.Group className='mt-3'>
+                        <Form.Select
+                          value={shift.endtd ? shift.endtd : td[0]}
+                          onChange={(e) =>
+                            setShift((prev) => ({
+                              ...prev,
+                              endtd: e.target.value,
+                            }))
+                          }
+                        >
+                          {td.map((i, index) => (
+                            <option key={index} value={i}>
+                              {i}
+                            </option>
+                          ))}
+                        </Form.Select>
+                      </Form.Group>
+                    </Col>
+                  </Row>
+                </Col>
+              </Row>
+              <hr className='mt-0' />
+              <Row>
+                <div className='form-check p-2'>
+                  <input
+                    className='schedule-form-check-input form-check-input ms-4'
+                    type='checkbox'
+                    checked={isLunch}
+                    name='flexRadioDefault'
+                    id='addlunch'
+                    onClick={() => setIsLunch(!isLunch)}
+                  />
+                  <label className='form-check-label ms-2' htmlFor='addlunch'>
+                    Add Lunch?
+                  </label>
+                </div>
+              </Row>
+              <hr className='m-0' />
+              {isLunch && (
+                <>
+                  <Row className='w-100 m-0'>
+                    <Col lg={6} md={5} xs={12} className='border-end m-0 p-3 '>
+                      <Row>
+                        <span>Lunch Start</span>
+                        <Col className='w-auto'>
+                          <Form.Group className='mt-3'>
+                            <Form.Select
+                              value={lunch.starthour}
+                              onChange={(e) =>
+                                setLunch((prev) => ({
+                                  ...prev,
+                                  starthour: e.target.value,
+                                }))
+                              }
+                            >
+                              {hours.map((i, index) => (
+                                <option key={index} value={i}>
+                                  {i}
+                                </option>
+                              ))}
+                            </Form.Select>
+                          </Form.Group>
+                        </Col>
+                        <Col className='w-auto'>
+                          <Form.Group className='mt-3'>
+                            <Form.Select
+                              value={
+                                lunch.startmin !== "00" ? lunch.startmin : "00"
+                              }
+                              onChange={(e) =>
+                                setLunch((prev) => ({
+                                  ...prev,
+                                  startmin: e.target.value,
+                                }))
+                              }
+                            >
+                              {min.map((i, index) => (
+                                <option key={index} value={i}>
+                                  {i}
+                                </option>
+                              ))}
+                            </Form.Select>
+                          </Form.Group>
+                        </Col>
+                        <Col className='w-auto'>
+                          <Form.Group className='mt-3'>
+                            <Form.Select
+                              value={lunch.starttd ? lunch.starttd : td[0]}
+                              onChange={(e) =>
+                                setLunch((prev) => ({
+                                  ...prev,
+                                  starttd: e.target.value,
+                                }))
+                              }
+                            >
+                              {td.map((i, index) => (
+                                <option key={index} value={i}>
+                                  {i}
+                                </option>
+                              ))}
+                            </Form.Select>
+                          </Form.Group>
+                        </Col>
+                      </Row>
+                    </Col>
+                    <Col
+                      lg={6}
+                      md={5}
+                      xs={12}
+                      className='border-start m-0  p-3'
+                    >
+                      <Row>
+                        <span>Lunch End</span>
+                        <Col className='w-auto'>
+                          <Form.Group className='mt-3'>
+                            <Form.Select
+                              value={
+                                lunch.endhour !== "0" ? lunch.endhour : "0"
+                              }
+                              onChange={(e) =>
+                                setLunch((prev) => ({
+                                  ...prev,
+                                  endhour: e.target.value,
+                                }))
+                              }
+                            >
+                              {hours.map((i, index) => (
+                                <option key={index} value={i}>
+                                  {i}
+                                </option>
+                              ))}
+                            </Form.Select>
+                          </Form.Group>
+                        </Col>
+                        <Col className='w-auto'>
+                          <Form.Group className='mt-3'>
+                            <Form.Select
+                              value={
+                                lunch.endmin !== "00" ? lunch.endmin : "00"
+                              }
+                              onChange={(e) =>
+                                setLunch((prev) => ({
+                                  ...prev,
+                                  endmin: e.target.value,
+                                }))
+                              }
+                            >
+                              {min.map((i, index) => (
+                                <option key={index} value={i}>
+                                  {i}
+                                </option>
+                              ))}
+                            </Form.Select>
+                          </Form.Group>
+                        </Col>
+                        <Col className='w-auto'>
+                          <Form.Group className='mt-3'>
+                            <Form.Select
+                              value={lunch.endtd ? lunch.endtd : td[0]}
+                              onChange={(e) =>
+                                setLunch((prev) => ({
+                                  ...prev,
+                                  endtd: e.target.value,
+                                }))
+                              }
+                            >
+                              {td.map((i, index) => (
+                                <option key={index} value={i}>
+                                  {i}
+                                </option>
+                              ))}
+                            </Form.Select>
+                          </Form.Group>
+                        </Col>
+                      </Row>
+                    </Col>
+                  </Row>
+                  <hr className='mt-0' />
+                </>
+              )}
+              <Row className='m-0  '>
+                <ListGroup horizontal>
+                  <Row className='m-0 p-0'>
+                    {dw.map((d, index) => (
+                      <Col lg={1} className='w-auto mx-0' key={index}>
+                        <ListGroup.Item
+                          as='li'
+                          active={checkDaysOff(d)}
+                          className='schedule-listgroup my-2 border  rounded p-2'
+                          onClick={() => daysOffHandler(d)}
+                        >
+                          {checkDaysOff(d) && (
+                            <i
+                              className='bi bi-check-circle-fill me-1 '
+                              style={{ color: "orange" }}
+                            ></i>
+                          )}
+                          <span style={{ fontSize: "0.8rem" }}>{d}</span>
+                        </ListGroup.Item>
+                      </Col>
+                    ))}
+                  </Row>
+                </ListGroup>
+                {/* </div> */}
+              </Row>
+              <hr className='mt-0' />
+            </Modal.Body>
+          ) : (
+            ""
+          )}
+          <Modal.Footer
+            as='div'
+            className='mt-auto d-flex justify-content-start'
           >
-            Save Schedule
-            <i className='fa-solid fa-floppy-disk ms-2'></i>
-          </Button>
-        </Modal.Footer>
+            <Button
+              type='button'
+              className='shadow p-2 rounded'
+              style={{
+                color: "#3b8543",
+                fontWeight: "bold",
+                backgroundColor: "white",
+                border: "none",
+                width: "auto",
+              }}
+              onClick={setScheduleHandler}
+            >
+              Save Schedule
+              <i className='fa-solid fa-floppy-disk ms-2'></i>
+            </Button>
+          </Modal.Footer>
+        </div>
       </Modal>
     </>
   )
