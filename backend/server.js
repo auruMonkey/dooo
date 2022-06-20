@@ -7,6 +7,7 @@ import businessRoutes from "./routes/businessRoutes.js"
 import uploadRoutes from "./routes/uploadRoutes.js"
 import settingsRoutes from "./routes/settingsRoutes.js"
 import serviceRoutes from "./routes/serviceRoutes.js"
+import appointmentsRoutes from "./routes/appointmentsRoutes.js"
 import connectDB from "./config/db.js"
 
 dotenv.config()
@@ -20,6 +21,7 @@ app.use(express.urlencoded({ limit: "50mb", extended: true }))
 app.use("/api/users", userRoutes)
 app.use("/api/business", businessRoutes)
 app.use("/api/settings", settingsRoutes)
+app.use("/api/appointments", appointmentsRoutes)
 // app.use("/api/services", serviceRoutes)
 // app.use("/api/admin", serviceRoutes)
 // app.use("/api/appointments", serviceRoutes)

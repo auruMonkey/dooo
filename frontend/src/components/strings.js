@@ -58,3 +58,17 @@ export const abstr = [
   `Already have an account?`,
   `Select a Category`,
 ]
+export const usappstr = [
+  `Pending Appointments`,
+  `Accepted Appointments`,
+  `Completed Appointments`,
+  `Cancelled Appointments`,
+]
+export const chappmstr = [
+  `Change an Appointment`,
+  `Choose location`,
+  `Choose Your Services`,
+  `Name of Service`,
+  `Duration`,
+  `Price`,
+]

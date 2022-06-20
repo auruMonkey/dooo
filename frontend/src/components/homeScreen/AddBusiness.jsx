@@ -3,6 +3,7 @@ import { Row, Col, Button, Card } from "react-bootstrap"
 import { useNavigate } from "react-router-dom"
 import { DUMMY_SERVICES_LINE } from "../../assets/dummy/dummyservices"
 import { hsabso, hsesbt, hsbst } from "../strings.js"
+import { SvgIcon } from "../../components"
 
 const AddBusiness = () => {
   const history = useNavigate()
@@ -18,13 +19,23 @@ const AddBusiness = () => {
 
       <Row className='justify-content-md-center text-center my-4'>
         {DUMMY_SERVICES_LINE.map((e) => (
-          <Col lg={2} md={6} sm={12} key={e.id}>
+          <Col lg={1} md={6} sm={12} key={e.id} className='m-4'>
             <Card className='addbusiness-card-card '>
-              <Card.Img
+              <div className='addbusiness-card-img mx-auto '>
+                <SvgIcon
+                  className='w-100'
+                  stroke='white'
+                  fill='white'
+                  comp={e.icon.element}
+                  size={e.icon.size}
+                  sz='50px'
+                />
+              </div>
+              {/* <Card.Img
                 className='addbusiness-card-img mx-auto '
                 variant='top'
                 src={e.image}
-              />
+              /> */}
               <Card.Body>
                 <Card.Text className='addbusiness-card-title'>
                   {e.name}

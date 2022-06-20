@@ -19,9 +19,13 @@ const addSettings = asyncHandler(async (req, res) => {
     { _id: id },
     {
       $addToSet: {
-        usersServices: {
+        userServices: {
           name: newName,
           shortName: category,
+          // icon: {
+          //   element: element,
+          //   size: size,
+          // },
         },
       },
     }

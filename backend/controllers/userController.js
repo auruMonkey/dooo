@@ -97,25 +97,24 @@ const registerUser = asyncHandler(async (req, res) => {
 const getAppts = asyncHandler(async (req, res) => {
   const { appts } = req.body
   let aps = []
-  
+  let avatBus = []
 
   for (let x of appts) {
-    let objc={}
-    const findedApp = await Appointment.findById(x)
-    
-    Business
-    
+    let objc = {}
+    const findedApp = await Appointment.findById({ _id: x })
+
     aps.push(findedApp)
   }
+  for (let y of aps) {
+    const findedBus = await Business.findById({ _id: y.business })
+    avatBus.push({
+      avat: findedBus.avatar.path,
+      id: y.business,
+      rating: findedBus.rating,
+    })
+  }
 
-  // const user = await User.findByIdAndUpdate(id, {
-  //   name: name,
-  //   email: email,
-  //   phone: phone,
-  // })
-
-  // const updatedUser = await User.findById(id)
-  res.json(aps)
+  res.json({ aps, avatBus })
 })
 
 export { getUsers, registerUser, authUser, updateUser, getAppts }

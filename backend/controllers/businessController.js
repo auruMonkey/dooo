@@ -26,6 +26,16 @@ const authBus = asyncHandler(async (req, res) => {
     throw new Error("Invalid email or password")
   }
 })
+//@desc  Auth business & get token
+//@route POST /api/business/login
+//@acess Public
+const businessById = asyncHandler(async (req, res) => {
+  const { idBsn } = req.body
+
+  const business = await Business.findById({ _id: idBsn })
+
+  res.json(business)
+})
 
 //@desc  Register a new user
 //@route POST /api/users
@@ -392,4 +402,5 @@ export {
   getBusinesses,
   getBusinesDetails,
   makeAppointment,
+  businessById,
 }

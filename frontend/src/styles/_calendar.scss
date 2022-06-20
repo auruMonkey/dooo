@@ -525,26 +525,33 @@
 .react-datepicker__quarter-text--highlighted,
 .react-datepicker__year-text--highlighted {
   border-radius: 0.3rem;
-  background-color: #3dcc4a;
+  background-color: #f89401;
   color: #fff;
 }
+
 .react-datepicker__day--highlighted:hover,
 .react-datepicker__month-text--highlighted:hover,
 .react-datepicker__quarter-text--highlighted:hover,
 .react-datepicker__year-text--highlighted:hover {
-  background-color: #32be3f;
+  background-color: #f89401;
 }
+//*******custom color 1******
 .react-datepicker__day--highlighted-custom-1,
 .react-datepicker__month-text--highlighted-custom-1,
 .react-datepicker__quarter-text--highlighted-custom-1,
 .react-datepicker__year-text--highlighted-custom-1 {
-  color: magenta;
+  border-radius: 0.3rem;
+  background-color: #f89401;
+  color: #fff;
 }
+// *******custom color 2*******
 .react-datepicker__day--highlighted-custom-2,
 .react-datepicker__month-text--highlighted-custom-2,
 .react-datepicker__quarter-text--highlighted-custom-2,
 .react-datepicker__year-text--highlighted-custom-2 {
-  color: green;
+  border-radius: 0.3rem;
+  background-color: green;
+  color: #fff;
 }
 .react-datepicker__day--selected,
 .react-datepicker__day--in-selecting-range,
@@ -608,12 +615,15 @@
   background-color: #f0f0f0;
   color: #000;
 }
+
 .react-datepicker__day--disabled,
 .react-datepicker__month-text--disabled,
 .react-datepicker__quarter-text--disabled,
 .react-datepicker__year-text--disabled {
   cursor: default;
+  // background-color: $gray-400;
   background-color: #d1372d80;
+  // color: $gray-700;
   color: #7d211b;
 }
 .react-datepicker__day--disabled:hover,

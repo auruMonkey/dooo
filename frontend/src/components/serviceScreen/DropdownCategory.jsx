@@ -23,20 +23,23 @@ const DropdownCategory = ({ category, setUserServices, setCategoryName }) => {
 
   const getFullName = () => {
     let fn = {}
+    console.log(category)
     if (settingsInfo !== undefined) {
-      if (category === "other") {
-        setCategoryName("Other")
-        setCategoryNameChosen("Other")
+      if (category === undefined) {
+        setCategoryName("allbusinesses")
+        setCategoryNameChosen("Pick a Category")
       } else {
         fn = settingsInfo[0].mainServices.find((o) => o.shortName === category)
         if (fn !== undefined) {
-          setCategoryName(fn.name)
+          setCategoryNameChosen(fn.name)
         } else {
           fn = settingsInfo[0].usersServices.find(
             (o) => o.shortName === category
           )
+          setCategoryNameChosen(fn.name)
         }
         setCategoryName(fn.name)
+        console.log(category)
       }
     }
   }

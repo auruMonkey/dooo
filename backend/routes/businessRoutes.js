@@ -14,9 +14,11 @@ import {
   getBusinesses,
   getBusinesDetails,
   makeAppointment,
+  businessById,
 } from "../controllers/businessController.js"
 
 router.route("/").post(registerBusiness)
+router.route("/id").post(businessById)
 router.route("/makeapp").post(makeAppointment)
 router.route("/all").post(getBusinesses)
 router.route("/details").post(getBusinesDetails)

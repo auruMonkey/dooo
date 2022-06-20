@@ -22,8 +22,10 @@ import Persona from "./Persona"
 import ServicesTable from "./ServicesTable"
 import MapContainer from "./MapContainer"
 import SvgIcon from "./SvgIcon"
+import ButtonShadow from "./UI/ButtonShadow"
 
 export {
+  ButtonShadow,
   AddBusiness,
   SvgIcon,
   Raiting,

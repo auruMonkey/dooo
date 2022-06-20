@@ -25,22 +25,22 @@ const AboutUsScreen = () => {
               <div className='d-flex flex-column'>
                 <span className='px-lg-5' style={{ color: "black" }}>
                   <p>
-                    DooMoble is designed for small ent repreneur who take their
+                    DooMoble is designed for small entrepreneur who take their
                     Business to the customer. By creating easy online
                     accessibility, Customers can search, review and book
                     appointments in the comfort of their home and build great
                     relationships with their favorite small businesses in their
-                    area. Cust omers and businesses are required to have a
+                    area. Customers and businesses are required to have a
                     profile, so reservations and easy contact can be maintained
                     and followed through. DooMoble is also designed to help
                     customers and businesses conduct safe transactions and
-                    encounters, because at DooMoble, safety i s first. We ensure
+                    encounters, because at DooMoble, safety is first. We ensure
                     that all users of DooMoble identify themselves with
                     government Identification, pictures, online activity, email,
                     current address, and phone number. Plus, both parties will
                     be a member of your site. Yes! your site, once you’re a
-                    member yo u are part of a growing community where you can
-                    tap into anywhere you travel. So welcome to your DooMoble
+                    member you are part of a growing community where you can tap
+                    into anywhere you travel. So welcome to your DooMoble
                     community and spread the word
                   </p>
                 </span>
@@ -66,7 +66,7 @@ const AboutUsScreen = () => {
                 </Col>
                 <Col lg={6} md={12} sm={12} className='align-self-end mt-1'>
                   <Image
-                    src='https://res.cloudinary.com/deveke/image/upload/v1655260480/qdnh8lkordqcpkzxays5.png'
+                    src='https://res.cloudinary.com/deveke/image/upload/v1655757855/cpgjb7mv521hnaifkgxh.png'
                     fluid
                   />
                 </Col>
@@ -75,7 +75,7 @@ const AboutUsScreen = () => {
                 <Col lg={5} md={12} sm={12}>
                   <Image
                     style={{ objectFit: "cover" }}
-                    src='https://res.cloudinary.com/deveke/image/upload/v1655260506/s9k1pfz0fr4nhsxviqzs.png'
+                    src='https://res.cloudinary.com/deveke/image/upload/v1655757900/kuman7pja4q3pja0wqtg.png'
                     fluid={true}
                   />
                 </Col>

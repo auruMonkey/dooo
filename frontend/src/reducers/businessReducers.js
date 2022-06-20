@@ -10,6 +10,18 @@ export const businessRegisterReducer = (state = {}, action) => {
       return state
   }
 }
+export const getBusinessByIdReducer = (state = {}, action) => {
+  switch (action.type) {
+    case "GET_BUSINESS_BY_ID_REQUEST":
+      return { loading: true }
+    case "GET_BUSINESS_BY_ID_SUCCESS":
+      return { loading: false, getBusinessInfo: action.payload }
+    case "GET_BUSINESS_BY_ID_FAIL":
+      return { loading: false, error: action.payload }
+    default:
+      return state
+  }
+}
 
 export const businessLoginReducer = (state = {}, action) => {
   switch (action.type) {

@@ -4,7 +4,6 @@ import axios from "axios"
 export const listServices =
   (keyword = "", category = "", pageNumber = "") =>
   async (dispatch) => {
-    console.log(category)
     try {
       dispatch({ type: "SERVICE_LIST_REQUEST" })
       //config axios

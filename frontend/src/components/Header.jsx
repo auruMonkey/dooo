@@ -63,7 +63,7 @@ const Header = () => {
                 </LinkContainer>
               </Nav.Item>
               <Nav.Item className='mx-lg-2'>
-                <LinkContainer to='search/allbusinesses'>
+                <LinkContainer to='/search'>
                   <Nav.Link>Services</Nav.Link>
                 </LinkContainer>
               </Nav.Item>

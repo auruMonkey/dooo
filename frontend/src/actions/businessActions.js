@@ -35,6 +35,25 @@ export const logoutB = () => (dispatch) => {
   dispatch({ type: "BUSINESS_LOGOUT" })
 }
 
+//logout action
+export const getBusinessById = (idBsn) => async (dispatch) => {
+  try {
+    const config = { headers: { "Content-type": "application/json" } }
+    dispatch({ type: "GET_BUSINESS_BY_ID_REQUEST" })
+    await axios.post("/api/business/id", { idBsn }, config).then((response) => {
+      dispatch({ type: "GET_BUSINESS_BY_ID_SUCCESS", payload: response.data })
+    })
+  } catch (error) {
+    dispatch({
+      type: "GET_BUSINESS_BY_ID_FAIL",
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    })
+  }
+}
+
 // register new business
 export const businessRegister =
   (
