@@ -250,13 +250,16 @@ const AddBusinessScreen = () => {
                 onChange={(e) => setField("category", e.target.value)}
                 isInvalid={!!errors.category}
               >
-                <option value='spa'>Spa</option>
-                <option value='barbersalon'>Barber/Salon</option>
-                <option value='petgrooming'>Pet Grooming</option>
-                <option value='vehicledetail'>Vehicle Detail</option>
-                <option value='health'>Health</option>
-                <option value='gym'>Gym</option>
-                <option value='entertainment'>Entertainment</option>
+                <option value='transport'>Transport Vehicles</option>
+                <option value='barbersalon'>
+                  Mobile Hair Stylist and Barber
+                </option>
+                <option value='grooming'>Mobile Pet Care</option>
+                <option value='cardetails'>Mobile Auto Care</option>
+                <option value='health'>Mobile Health</option>
+                <option value='property'>Property Care</option>
+                <option value='entertainment'>Mobile Entertainment</option>
+                <option value='film'>Photography and Filmmaking</option>
                 <option value='other' onClick={() => showAddOther(true)}>
                   Other
                 </option>
