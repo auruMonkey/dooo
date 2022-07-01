@@ -5,6 +5,7 @@ import BusinessServices from "./BusinessServices"
 import BusinessLocations from "./BusinessLocations"
 import BusinessCalendar from "./BusinessCalendar"
 import BusinessAppointments from "./BusinessAppointments"
+import PageHeader from "./PageHeader"
 
 export {
   BusinessManager,
@@ -14,4 +15,5 @@ export {
   BusinessLocations,
   BusinessCalendar,
   BusinessAppointments,
+  PageHeader,
 }

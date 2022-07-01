@@ -20,38 +20,43 @@ export const HoursCell = (props) => {
 export const RendMinutes = ({
   minArray,
   appointmentTime,
-  setAppointmentTime,
-  setHtSelect,
+  appointmentTimeHandler,
 }) => {
   return (
     <Row className='m-0'>
-      {minArray.map((i) => (
-        <HoursCell key={i.name}>
-          {i.inactive ? (
-            <div
-              className={"border rounded bd-hours-inactive"}
-            >{`Lunch: ${appointmentTime.hours}:${i.name} `}</div>
-          ) : (
-            <div
-              className={
-                appointmentTime.min === Number(i.name)
-                  ? "border rounded bd-hours active"
-                  : "border rounded bd-hours"
-              }
-              onClick={() => {
-                setAppointmentTime({
-                  hours: appointmentTime.hours,
-                  min: Number(i.name),
-                })
-                setHtSelect({
-                  hours: appointmentTime.hours,
-                  min: Number(i.name),
-                })
-              }}
-            >{`${appointmentTime.hours}:${i.name} `}</div>
-          )}
-        </HoursCell>
-      ))}
+      {appointmentTime !== undefined ? (
+        <>
+          {minArray.map((i) => (
+            <HoursCell key={i.name}>
+              {i.inactive ? (
+                <div
+                  className={"border rounded bd-hours-inactive"}
+                >{`Lunch: ${appointmentTime.hours}:${i.name} `}</div>
+              ) : (
+                <div
+                  className={
+                    appointmentTime.min === Number(i.name)
+                      ? "border rounded bd-hours-active"
+                      : "border rounded bd-hours"
+                  }
+                  onClick={() => {
+                    appointmentTimeHandler({
+                      hours: appointmentTime.hours,
+                      min: Number(i.name),
+                    })
+                  }}
+                >{`${
+                  appointmentTime.hours < 13
+                    ? appointmentTime.hours
+                    : appointmentTime.hours - 12
+                }:${i.name} `}</div>
+              )}
+            </HoursCell>
+          ))}
+        </>
+      ) : (
+        ""
+      )}
     </Row>
   )
 }

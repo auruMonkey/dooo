@@ -1,42 +1,28 @@
+import { useEffect } from "react"
 import { useState } from "react"
 import { Row, ListGroup } from "react-bootstrap"
 import { chappmstr } from "../../../strings"
 
-const ChooseLocation = ({
-  locationB,
-  locationA,
-  setNewAppointment,
-  appointmentInfo,
-}) => {
+const ChooseLocation = ({ locationB, locationA, newLocation, isEditApp }) => {
   // main state
-  const [schLocation, setSchLocation] = useState(locationA)
+  const [schLocation, setSchLocation] = useState()
+
+  useEffect(() => {
+    setSchLocation(locationA)
+  }, [locationA])
+
   //*******check location*******
   const checkActiveLocation = (address) => {
-    if (schLocation === {}) {
-      if (locationA.address === address) {
-        return true
-      } else {
-        return false
-      }
+    if (schLocation === address) {
+      return true
     } else {
-      if (schLocation.address === address) {
-        return true
-      } else {
-        return false
-      }
+      return false
     }
   }
   // *******click location handler*******
   const locationIdHandler = (loc) => {
-    setSchLocation(loc)
-    setNewAppointment({
-      ...appointmentInfo,
-      location: {
-        address: loc.address,
-        latitude: loc.latitude,
-        longitude: loc.longitude,
-      },
-    })
+    setSchLocation(loc.address)
+    newLocation(loc)
   }
   return (
     <Row>
@@ -47,7 +33,11 @@ const ChooseLocation = ({
             as='li'
             key={l._id}
             active={checkActiveLocation(l.address)}
-            className='schedule-listgroup mt-2 border'
+            className={
+              isEditApp
+                ? "schedule-listgroup mt-2 border"
+                : "schedule-listgroup mt-2 border disabled"
+            }
             onClick={() => locationIdHandler(l)}
           >
             {checkActiveLocation(l.address) && (

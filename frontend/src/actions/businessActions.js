@@ -388,3 +388,63 @@ export const updateScheduleBusiness =
       })
     }
   }
+// update business information
+export const getBusinessApnById = (apnArray) => async (dispatch) => {
+  try {
+    dispatch({ type: "GET_BUSINESS_APPOINTMENT_REQUEST" })
+    await axios
+      .post(
+        "/api/business/appointment",
+        { apnArray },
+        {
+          headers: { "Content-type": "application/json" },
+        }
+      )
+      .then((response) => {
+        dispatch({
+          type: "GET_BUSINESS_APPOINTMENT_SUCCESS",
+          payload: response.data,
+        })
+      })
+  } catch (error) {
+    dispatch({
+      type: "GET_BUSINESS_APPOINTMENT_FAIL",
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    })
+  }
+}
+// update business information
+export const acceptBusinessApn = (id) => async (dispatch) => {
+  try {
+    dispatch({ type: "ACCEPT_BUSINESS_APPOINTMENT_REQUEST" })
+    await axios
+      .post(
+        "/api/business/appointment/accept",
+        { id },
+        {
+          headers: { "Content-type": "application/json" },
+        }
+      )
+      .then((response) => {
+        dispatch({
+          type: "ACCEPT_BUSINESS_APPOINTMENT_SUCCESS",
+          payload: response.data,
+        })
+        dispatch({
+          type: "GET_BUSINESS_APPOINTMENT_SUCCESS",
+          payload: response.data,
+        })
+      })
+  } catch (error) {
+    dispatch({
+      type: "ACCEPT_BUSINESS_APPOINTMENT_FAIL",
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    })
+  }
+}

@@ -15,8 +15,8 @@ const Footer = () => {
             <Stack>
               <div>
                 <h6 className='mt-3'>EMAIL</h6>
-                <a href='mailto:lineme59@gmail.com' className='footer-email'>
-                  lineme59@gmail.com
+                <a href='mailto:contact@doomoble.com' className='footer-email'>
+                  contact@doomoble.com
                 </a>
               </div>
               <div>

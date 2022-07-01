@@ -2,10 +2,13 @@ import { useEffect, useState } from "react"
 import { Row } from "react-bootstrap"
 import { to24Format, HoursCell, RendMinutes, checkLunchTime } from "./Utils"
 
-const HourSelector = ({ location, scheduleTime, setHtSelect }) => {
-  const [businessHours, setBusinessHours] = useState({})
-  const [appointmentTime, setAppointmentTime] = useState({})
-  const [isReady, setIsReady] = useState(false)
+const HourSelector = ({
+  location,
+  scheduleTime,
+  appointmentTime,
+  appointmentTimeHandler,
+}) => {
+  const [businessHours, setBusinessHours] = useState()
 
   const [minArray, setminArray] = useState([
     { name: "00", inactive: "" },
@@ -13,10 +16,7 @@ const HourSelector = ({ location, scheduleTime, setHtSelect }) => {
     { name: "30", inactive: "" },
     { name: "45", inactive: "" },
   ])
-
   useEffect(() => {
-    console.log(scheduleTime)
-
     if (Object.keys(location).length !== 0) {
       setBusinessHours({
         start: to24Format(location.start),
@@ -26,81 +26,98 @@ const HourSelector = ({ location, scheduleTime, setHtSelect }) => {
           end: to24Format(location.lunch.end),
         },
       })
-      setIsReady(true)
     }
-    if (Object.keys(scheduleTime).length !== 0) {
+  }, [location])
+
+  useEffect(() => {
+    const timestamp = Date.parse(scheduleTime)
+    if (isNaN(timestamp) === false) {
       const dt = new Date(scheduleTime)
+
       const tdt = dt.toLocaleTimeString("default", {
         hour: "2-digit",
         minute: "2-digit",
       })
-
-      setAppointmentTime({
+      const tAt = {
         hours: Number(tdt.split(":")[0]),
         min: Number(tdt.split(":")[1].split(" ")[0]),
-      })
+      }
+      appointmentTimeHandler(tAt)
     }
-  }, [location])
+  }, [scheduleTime, appointmentTimeHandler])
 
   const clickHoursHandler = (hour, td) => {
     if (td === "PM") {
-      setAppointmentTime({
+      const tAt = {
         min: appointmentTime.min,
         hours: Number(hour + 12),
-      })
+      }
+      appointmentTimeHandler(tAt)
     } else {
-      setAppointmentTime({
+      const tAt = {
         min: appointmentTime.min,
         hours: Number(hour),
-      })
+      }
+      appointmentTimeHandler(tAt)
     }
     checkLunchTime(hour, businessHours, setminArray)
-    setHtSelect({
-      min: appointmentTime.min,
-      hours: Number(hour),
-    })
   }
-
   const rendHours = () => {
-    const colHours = businessHours.end.hours - businessHours.start.hours
     let arrHours = []
-    for (let i = 0; i < colHours; i++) {
-      const t = businessHours.start.hours + i
-      if (businessHours.start.td === "AM") {
-        if (t < 13) {
-          arrHours.push({ hours: t, td: "AM" })
-        } else {
-          arrHours.push({ hours: t - 12, td: "PM" })
+    if (businessHours !== undefined) {
+      const colHours = businessHours.end.hours - businessHours.start.hours
+
+      for (let i = 0; i < colHours; i++) {
+        const t = businessHours.start.hours + i
+        if (businessHours.start.td === "AM") {
+          if (t < 13) {
+            arrHours.push({ hours: t, td: "AM" })
+          } else {
+            arrHours.push({ hours: t - 12, td: "PM" })
+          }
         }
       }
     }
-
     return (
       <>
         <Row className='m-0 p-0'>
           {arrHours.map((i) => (
             <HoursCell key={i.hours}>
-              <div
-                className={
-                  appointmentTime.min === Number(i.name)
-                    ? "border rounded bd-hours active"
-                    : "border rounded bd-hours"
-                }
-                onClick={() => clickHoursHandler(i.hours, i.td)}
-              >{`${i.hours}:${i.td}`}</div>
+              {appointmentTime.hours < 13 ? (
+                <div
+                  className={
+                    appointmentTime.hours === i.hours
+                      ? "border rounded bd-hours-active"
+                      : "border rounded bd-hours"
+                  }
+                  onClick={() => clickHoursHandler(i.hours, i.td)}
+                >{`${i.hours}:${i.td}`}</div>
+              ) : (
+                <div
+                  className={
+                    appointmentTime.hours - 12 === Number(i.hours)
+                      ? "border rounded bd-hours-active"
+                      : "border rounded bd-hours"
+                  }
+                  onClick={() => clickHoursHandler(i.hours, i.td)}
+                >{`${i.hours}:${i.td}`}</div>
+              )}
             </HoursCell>
           ))}
         </Row>
         <RendMinutes
           minArray={minArray}
           appointmentTime={appointmentTime}
-          setAppointmentTime={setAppointmentTime}
-          setHtSelect={setHtSelect}
+          appointmentTimeHandler={appointmentTimeHandler}
         />
       </>
     )
   }
-  return <>{isReady && <Row>{rendHours()}</Row>}</>
+  return (
+    <>
+      <Row>{rendHours()}</Row>
+    </>
+  )
 }
 
 export default HourSelector

@@ -5,33 +5,37 @@ import { chappmstr } from "../../../strings"
 const ChooseService = ({
   servicesB,
   servicesA,
-  setNewAppointment,
-  appointmentInfo,
+  newServicesHandle,
+  isEditApp,
 }) => {
   //main state
-  const [checkedServices, setCheckedServices] = useState(servicesA)
+  const [checkedServices, setCheckedServices] = useState()
 
-  const checkScheduleServicesId = (id) => {
-    const dd = checkedServices.find((o) => o._id === id)
-    return dd ? true : false
+  useEffect(() => {
+    newServicesHandle(servicesA)
+    setCheckedServices(servicesA)
+  }, [])
+
+  const checkScheduleServicesId = (name) => {
+    if (checkedServices !== undefined) {
+      const dd = checkedServices.find((o) => o.name === name)
+      return dd ? true : false
+    }
   }
 
   //click services handler
   const handlerScheduleServicesId = (ser) => {
-    if (checkedServices.find((x) => x._id === ser._id)) {
+    if (checkedServices.find((x) => x.name === ser.name)) {
       const newArr = checkedServices.filter((i) => {
-        return i._id !== ser._id
+        return i.name !== ser.name
       })
       setCheckedServices(newArr)
+      newServicesHandle(newArr)
     } else {
       setCheckedServices((s) => [...s, ser])
+      newServicesHandle((s) => [...s, ser])
     }
   }
-  useEffect(() => {
-    let nai = appointmentInfo
-    nai.services = checkedServices
-    setNewAppointment(nai)
-  }, [checkedServices])
 
   return (
     <Row className=' mt-3 p-0'>
@@ -54,13 +58,17 @@ const ChooseService = ({
               <ListGroup.Item
                 as='li'
                 key={l._id}
-                active={checkScheduleServicesId(l._id)}
-                className='schedule-listgroup mt-2 border'
+                active={checkScheduleServicesId(l.name)}
+                className={
+                  isEditApp
+                    ? "schedule-listgroup mt-2 border"
+                    : "schedule-listgroup mt-2 border disabled"
+                }
                 onClick={() => handlerScheduleServicesId(l)}
               >
                 <Row>
                   <Col lg={4} md={4} sm={4}>
-                    {checkScheduleServicesId(l._id) && (
+                    {checkScheduleServicesId(l.name) && (
                       <i
                         className='bi bi-check-circle-fill me-3 '
                         style={{ color: "orange" }}

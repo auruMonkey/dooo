@@ -11,7 +11,10 @@ import {
   serviceListReducer,
   serviceDetailsReducer,
 } from "./reducers/serviceReducers"
-import { getAppointmentReducer } from "./reducers/appointmentReducer"
+import {
+  getAppointmentReducer,
+  cancelAppointmentReducer,
+} from "./reducers/appointmentReducer"
 import {
   businessRegisterReducer,
   businessLoginReducer,
@@ -24,6 +27,8 @@ import {
   editServiceReducer,
   businessScheduleUpdateReducer,
   getBusinessByIdReducer,
+  getBusinessApnByIdReducer,
+  acceptBusinessApnReducer,
 } from "./reducers/businessReducers"
 import {
   uploadImageReducer,
@@ -32,6 +37,11 @@ import {
   deleteImageBusinessReducer,
 } from "./reducers/uploadReducers"
 import { settingsUpReducer } from "./reducers/settingsReducers"
+import {
+  adminLoginReducer,
+  adminFindReducer,
+  adminDeleteReducer,
+} from "./reducers/adminReducers"
 //reducers
 const reducer = combineReducers({
   userLogin: userLoginReducer,
@@ -45,7 +55,9 @@ const reducer = combineReducers({
   businessUpdatePersonal: businessUpdatePersonalReducer,
   businessUpdateBusiness: businessUpdateBusinessReducer,
   businessScheduleUpdate: businessScheduleUpdateReducer,
+  acceptBusinessApn: acceptBusinessApnReducer,
   getBusinessById: getBusinessByIdReducer,
+  getBusinessApnById: getBusinessApnByIdReducer,
   updateLocation: updateLocationReducer,
   deleteLocation: deleteLocationReducer,
   updateServices: updateServicesReducer,
@@ -57,6 +69,10 @@ const reducer = combineReducers({
   deleteImageBusiness: deleteImageBusinessReducer,
   settingsUp: settingsUpReducer,
   getAppointment: getAppointmentReducer,
+  cancelAppointment: cancelAppointmentReducer,
+  adminLogin: adminLoginReducer,
+  adminFind: adminFindReducer,
+  adminDelete: adminDeleteReducer,
 })
 
 //get initial user info

@@ -42,6 +42,10 @@ const BusinessDetails = () => {
     left: true,
     right: false,
   })
+  const [location, setLocation] = useState([])
+  const [imagesGlr, setImagesGlr] = useState([])
+  const [servicesList, setServicesList] = useState([])
+  const [services, setServices] = useState({})
 
   const [idLocation, setIdLocation] = useState(0)
   // state for modal
@@ -137,22 +141,18 @@ const BusinessDetails = () => {
     }
     setDaysOff(fg)
   }
-  let location = []
-  let imagesGlr = []
-  let servicesList = []
-  //create location array
-  if (service !== undefined) {
-    if (Object.keys(service).length !== 0) {
-      location = service.locations.map((s) => s)
-      location = service.locations
-      if (location.length < 2) {
-        setDisableButton({ left: true, right: true })
+
+  useEffect(() => {
+    if (service !== undefined) {
+      setServices(service)
+      setLocation(service.locations.map((s) => s))
+      setImagesGlr(service.gallery.map((s) => s))
+      setServicesList(service.services.map((s) => s))
+      if (service.locations.length < 2) {
+        setDisableButton(() => ({ left: true, right: true }))
       }
-      servicesList = service.services
-      imagesGlr = service.gallery.map((s) => s)
-      servicesList = service.services.map((s) => s)
     }
-  }
+  }, [service])
   //check services
   const checkScheduleServicesId = (id) => {
     return schServices.find((x) => x._id === id)
@@ -203,7 +203,6 @@ const BusinessDetails = () => {
       schServices.length !== 0 &&
       Object.keys(schLocation).length !== 0
     ) {
-      console.log("valid")
       dispatch(
         makeAppointment(
           userInfo._id,
@@ -322,7 +321,7 @@ const BusinessDetails = () => {
                 <hr className='m-0' />
                 <div className='h-100 d-flex flex-column my-1 gap-1'>
                   {location.length > 0 &&
-                    hoursHelper(location[idLocation].address, service)}
+                    hoursHelper(location[idLocation].address, services)}
                   {/*<div className='map-business-detail h-100 p-1'>
                     <GoogleMapReact
                       bootstrapURLKeys={{

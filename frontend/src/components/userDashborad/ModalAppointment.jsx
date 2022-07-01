@@ -2,29 +2,39 @@ import { useEffect, useState } from "react"
 import { useSelector, useDispatch } from "react-redux"
 import { Modal } from "react-bootstrap"
 import { chappmstr } from "../strings"
-import { Loader, Message } from "../../components"
+import { Loader, Message, ButtonShadow } from "../../components"
+import { useNavigate } from "react-router-dom"
+
 import {
   ChooseService,
   ChooseLocation,
   BusinessInfo,
   UserInfo,
   DataSelect,
+  Summury,
 } from "../userDashborad/components/modalAppointment"
-import { getBusinessById, getAppointmentById } from "../../actions"
+import {
+  getBusinessById,
+  getAppointmentById,
+  cancelAppointmentById,
+} from "../../actions"
 
-const ModalAppointment = ({ show, handleCloseModal, appointment }) => {
-  //main state
-  /*    business: "",
-    businessstatus: "Pending",
-    datetime: new Date(),
-    location: {},
-    services: [],
-    user: "",
-    userstatus: "Pending",*/
+const ModalAppointment = ({
+  show,
+  handleCloseModal,
+  appointment,
+  setCancelled,
+  setCanceled,
+  updateApp,
+}) => {
+  const [isEditApp, setIsEditApp] = useState(false)
   const [newAppointment, setNewAppointment] = useState({})
-
+  const [newLocationAddr, setNewLocationAddr] = useState("")
+  const [newServices, setNewServices] = useState([])
+  const [newDateTime, setNewDateTime] = useState("")
   //def dispatch
   const dispatch = useDispatch()
+  const history = useNavigate()
 
   useEffect(() => {
     dispatch(getAppointmentById(appointment.idApp))
@@ -52,18 +62,60 @@ const ModalAppointment = ({ show, handleCloseModal, appointment }) => {
   } = useSelector((state) => state.getBusinessById)
 
   useEffect(() => {
-    if (appointmentInfo !== undefined) {
-      if (Object.keys(appointmentInfo).length !== 0) {
-        setNewAppointment(appointmentInfo)
-        
-      }
-    }
+    const timer = setTimeout(() => {
+      setNewAppointment(appointmentInfo)
+      setNewLocationAddr(appointmentInfo.location.address)
+    }, 1000)
+    return () => clearTimeout(timer)
   }, [appointmentInfo])
+
+  const newLocation = (loc) => {
+    setNewLocationAddr(loc.address)
+  }
+  const newServicesHandle = (ser) => {
+    setNewServices(ser)
+  }
+  const setNewDateHandler = (date) => {
+    const nd = date.toISOString()
+    setNewDateTime(nd)
+  }
+
+  const closeModalHandle = () => {
+    handleCloseModal()
+  }
+  const manageAppClickHandler = () => {
+    setIsEditApp(true)
+    setNewAppointment(appointmentInfo)
+  }
+  const cancelUpdateAppHandler = () => {
+    setNewAppointment(appointmentInfo)
+    setNewLocationAddr(appointmentInfo.location.address)
+    setNewServices(appointmentInfo.services)
+    setNewDateTime(appointmentInfo.datetime)
+    setIsEditApp(false)
+    handleCloseModal()
+  }
+  //Cancel appointment
+  const cancelAppHandler = () => {
+    dispatch(cancelAppointmentById(appointment.idApp))
+    handleCloseModal()
+    setIsEditApp(false)
+    history("/dashboard/manage")
+    updateApp()
+  }
+  const reschAppHandler = () => {
+    newAppointment.location.address = newLocationAddr
+    newAppointment.services = newServices
+    // newAppointment.datetime = newDateTime
+    console.log("new appointment", newAppointment)
+    //SEND TO SERVER UPDATE
+    setIsEditApp(false)
+  }
 
   return (
     <Modal
       show={show}
-      onHide={handleCloseModal}
+      onHide={closeModalHandle}
       backdrop='static'
       centered
       size='xl'
@@ -82,47 +134,100 @@ const ModalAppointment = ({ show, handleCloseModal, appointment }) => {
         </Modal.Header>
         {/* *******Body******* */}
         <Modal.Body className='text-dark d-flex flex-column min-vh-100'>
-          {!getBusinessInfo || !userInfo || !appointmentInfo ? (
+          {!getBusinessInfo ||
+          !userInfo ||
+          !appointmentInfo ||
+          newAppointment === undefined ? (
             <Loader />
           ) : (
             <>
-              {newAppointment !== {} && (
-                <>
-                  <UserInfo
-                    avatar={userInfo.avatar.path}
-                    name={userInfo.name}
-                  />
-                  <hr className='border' />
-                  <BusinessInfo
-                    avatar={getBusinessInfo.avatar.path}
-                    rating={getBusinessInfo.rating}
-                    address={newAppointment.location.address}
-                  />
-                  <hr className='border' />
-                  <ChooseLocation
-                    locationB={getBusinessInfo.locations}
-                    locationA={newAppointment.location}
-                    setNewAppointment={setNewAppointment}
-                    appointmentInfo={appointmentInfo}
-                  />
-                  <ChooseService
-                    servicesB={getBusinessInfo.services}
-                    servicesA={newAppointment.services}
-                    setNewAppointment={setNewAppointment}
-                    appointmentInfo={appointmentInfo}
-                  />
-                  <DataSelect
-                    datetime={newAppointment.datetime}
-                    scheduleB={getBusinessInfo.schedule}
-                    locationA={newAppointment.location}
-                    setNewAppointment={setNewAppointment}
-                    appointmentInfo={appointmentInfo}
-                  />
-                </>
-              )}
+              <UserInfo avatar={userInfo.avatar.path} name={userInfo.name} />
+              <hr className='border' />
+              <BusinessInfo
+                avatar={getBusinessInfo.avatar.path}
+                rating={getBusinessInfo.rating}
+                address={newLocationAddr}
+              />
+
+              <hr className='border' />
+              <ChooseLocation
+                locationB={getBusinessInfo.locations}
+                locationA={newLocationAddr}
+                newLocation={newLocation}
+                isEditApp={isEditApp}
+              />
+              <hr className='border' />
+              <ChooseService
+                servicesB={getBusinessInfo.services}
+                servicesA={newAppointment.services}
+                newServicesHandle={newServicesHandle}
+                isEditApp={isEditApp}
+              />
+              <hr className='border' />
+              <DataSelect
+                appointment={newAppointment}
+                scheduleB={getBusinessInfo.schedule}
+                setNewDateHandler={setNewDateHandler}
+                isEditApp={isEditApp}
+              />
+
+              <hr className='border' />
+              <Summury
+                newAppointment={newAppointment}
+                businessName={getBusinessInfo.businessName}
+                newLocationAddr={newLocationAddr}
+                newServices={newServices}
+                // newDateText={newDateText}
+                isEditApp={isEditApp}
+              />
+              <hr className='border' />
             </>
           )}
         </Modal.Body>
+        {/* *******Footer****** */}
+        <Modal.Footer
+          as='div'
+          className='mt-auto d-flex justify-content-start m-2'
+        >
+          {!isEditApp ? (
+            <ButtonShadow
+              text='Manage Appointment'
+              color='#0047AB'
+              icon='bi bi-alarm-fill ms-2'
+              handleOnClick={manageAppClickHandler}
+            />
+          ) : (
+            <div className='d-flex flex-row w-100'>
+              <div className='w-100'>
+                <ButtonShadow
+                  text='Cancel Update'
+                  color='#c72525'
+                  icon='bi bi-x-lg ms-2'
+                  handleOnClick={cancelUpdateAppHandler}
+                />
+              </div>
+              <div className='d-flex justify-content-end w-100'>
+                <div className='me-4'>
+                  <ButtonShadow
+                    text='Reschedule Appointment'
+                    color='#008000'
+                    icon='bi bi-alarm-fill ms-2'
+                    handleOnClick={reschAppHandler}
+                  />
+                </div>
+                <div>
+                  <ButtonShadow
+                    text='Cancel Appointment'
+                    color='#fff'
+                    bgcolor='#c72525'
+                    icon='bi bi-trash3-fill ms-2'
+                    handleOnClick={cancelAppHandler}
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+        </Modal.Footer>
       </div>
     </Modal>
   )

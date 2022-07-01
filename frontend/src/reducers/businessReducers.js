@@ -122,6 +122,30 @@ export const editServiceReducer = (state = {}, action) => {
       return state
   }
 }
+export const getBusinessApnByIdReducer = (state = {}, action) => {
+  switch (action.type) {
+    case "GET_BUSINESS_APPOINTMENT_REQUEST":
+      return { loading: true }
+    case "GET_BUSINESS_APPOINTMENT_SUCCESS":
+      return { loading: false, businessApnInfo: action.payload }
+    case "GET_BUSINESS_APPOINTMENT_FAIL":
+      return { loading: false, error: action.payload }
+    default:
+      return state
+  }
+}
+export const acceptBusinessApnReducer = (state = {}, action) => {
+  switch (action.type) {
+    case "ACCEPT_BUSINESS_APPOINTMENT_REQUEST":
+      return { loading: true }
+    case "ACCEPT_BUSINESS_APPOINTMENT_SUCCESS":
+      return { loading: false,  businessApnInfo: action.payload }
+    case "ACCEPT_BUSINESS_APPOINTMENT_FAIL":
+      return { loading: false, error: action.payload }
+    default:
+      return state
+  }
+}
 
 export const businessScheduleUpdateReducer = (state = {}, action) => {
   switch (action.type) {

@@ -13,6 +13,8 @@ import {
   ScheduleService,
   BusinessDetails,
   DashBoradScreen,
+  BusinessPreview,
+  AdminLoginScreen,
 } from "./screens"
 import { Header, Footer } from "./components"
 import { useDispatch, useSelector } from "react-redux"
@@ -49,8 +51,12 @@ const App = () => {
                 path='/admindashboard'
                 element={<AdminDashboardScreen />}
               />
+              <Route path='/admin' element={<AdminLoginScreen />} exact />
               <Route path='/addbusiness' element={<AddBusinessScreen />} />
               <Route path='/dashboard' element={<DashBoradScreen />} />
+              <Route path='/dashboard/manage' element={<DashBoradScreen />} />
+              <Route path='/dashboard/calendar' element={<DashBoradScreen />} />
+              <Route path='/dashboard/account' element={<DashBoradScreen />} />
               <Route
                 path='/addbusiness/:service'
                 element={<AddBusinessScreen />}
@@ -75,6 +81,11 @@ const App = () => {
               <Route
                 path='/service/:category/:id'
                 element={<BusinessDetails />}
+                exact
+              />
+              <Route
+                path='/preview/:category/:id'
+                element={<BusinessPreview />}
                 exact
               />
 

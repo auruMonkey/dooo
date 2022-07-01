@@ -198,7 +198,7 @@ legend {
   color: $black;
 }
 .modal-title {
-  color: $secondary;
+  color: $gray-700;
   font-weight: 500;
   font-size: 1.5rem;
 }
@@ -221,15 +221,22 @@ legend {
   font-weight: 600;
   text-align: right;
   line-height: 5rem;
+  color: $gray-700;
   padding-right: 1rem;
   &:hover {
     cursor: pointer;
     background-color: $gray-300;
   }
-  &.active {
-    background-color: $gray-700;
-    color: $white;
-  }
+}
+.bd-hours-active {
+  height: 4rem;
+  font-size: 1rem;
+  font-weight: 600;
+  text-align: right;
+  line-height: 5rem;
+  padding-right: 1rem;
+  background-color: $gray-700;
+  color: $white;
 }
 .bd-hours-inactive {
   height: 4rem;
@@ -306,6 +313,10 @@ legend {
 .accordion-item:first-of-type .accordion-button {
   border-radius: 0;
 }
-.modal-content {
-  background: transparent;
+
+.list-group-item.disabled,
+.list-group-item:disabled {
+  color: gray;
+  pointer-events: none;
+  background-color: $gray-300;
 }

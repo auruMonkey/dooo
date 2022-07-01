@@ -28,7 +28,7 @@ const BusinessManager = () => {
   const { businessInfo } = useSelector((state) => state.businessLogin)
 
   //states for files
-  const [document, setDocument] = useState()
+  const [document, setDocument] = useState("")
   const [documentName, setDocumentName] = useState("")
   //is form active state
   const [isEditPersonal, setIsEditPersonal] = useState(true)

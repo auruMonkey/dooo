@@ -17,20 +17,22 @@ import {
   BusinessLocations,
   BusinessCalendar,
   BusinessAppointments,
+  PageHeader,
 } from "../components/businessDashboard"
 import { useEffect } from "react"
 
 const DbBusinesses = () => {
   const [btnsState, setBtnsState] = useState(7)
   const [isBI, setisBI] = useState(false)
+  const [business, setBusiness] = useState()
   //const for work with url
   const history = useNavigate()
 
   //slicer for business info
   const { businessInfo } = useSelector((state) => state.businessLogin)
   useEffect(() => {
-    if (businessInfo) {
-      setisBI(true)
+    if (businessInfo !== undefined) {
+      setBusiness(() => businessInfo)
     } else {
       setisBI(false)
     }
@@ -51,7 +53,7 @@ const DbBusinesses = () => {
       case 2:
         return <BusinessCalendar />
       case 1:
-        return <BusinessAppointments />
+        return <BusinessAppointments businessInfo={businessInfo} />
       default:
         break
     }
@@ -59,11 +61,7 @@ const DbBusinesses = () => {
 
   return (
     <Stack className='m-0'>
-      <Container>
-        <h6 className='text-dark my-3'>
-          <strong>{`Welcome, ${businessInfo && businessInfo.name}`}</strong>
-        </h6>
-      </Container>
+      <PageHeader businessInfo={businessInfo} />
       <hr className='m-0' />
       <Container>
         <Row>

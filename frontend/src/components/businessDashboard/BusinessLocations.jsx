@@ -64,7 +64,10 @@ const BusinessLocations = () => {
 
         <ListGroup>
           {allLocation.map((l) => (
-            <ListGroup.Item className='bg-white text-dark mb-3 border rounded'>
+            <ListGroup.Item
+              key={l._id}
+              className='bg-white text-dark mb-3 border rounded'
+            >
               <Row>
                 <Col>
                   <i

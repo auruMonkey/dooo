@@ -11,7 +11,15 @@ const DashBoradScreen = () => {
 
   return (
     <Stack direction='vertical' className='bg-white text-dark '>
-      {userInfo ? <DbUser /> : <DbBusinesses />}
+      {userInfo !== undefined || businessInfo !== undefined ? (
+        userInfo ? (
+          <DbUser />
+        ) : (
+          <DbBusinesses />
+        )
+      ) : (
+        ""
+      )}
     </Stack>
   )
 }

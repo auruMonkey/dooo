@@ -103,10 +103,10 @@ const ContactUsScreen = () => {
               </span>
               <h4 className='mt-3'>
                 <a
-                  href='mailto:cnorga@yahoo.com'
+                  href='mailto:contact@doomoble.com'
                   className='cus-contactus-email '
                 >
-                  cnorga@yahoo.com
+                  contact@doomoble.com
                 </a>
               </h4>
             </Stack>

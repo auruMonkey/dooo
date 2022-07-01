@@ -437,3 +437,48 @@
 .db-business-manager.dropdown-menu.show {
   background-color: $white !important;
 }
+
+.table-curved {
+  border-collapse: collapse;
+  margin-left: 1rem;
+}
+
+.table-curved td {
+  position: relative;
+  background-color: white;
+  margin-left: 1rem;
+  padding: 6px 10px;
+  border-bottom: 0.3rem solid white;
+  border-top: 0.3rem solid white;
+  &:hover {
+    background-color: $gray-300;
+  }
+}
+.tap-button {
+  background: $gray-300;
+  width: auto;
+  border: none;
+  color: $gray-700;
+  padding: 0.5rem;
+  margin-right: 1rem;
+  border-radius: 0.3rem;
+  font-size: 0.8rem;
+  &:hover {
+    cursor: pointer;
+    background: $orange;
+  }
+}
+.tap-button-active {
+  width: auto;
+  background: $orange;
+  border: none;
+  color: $gray-700;
+  padding: 0.5rem;
+  margin-right: 1rem;
+  border-radius: 0.3rem;
+  font-size: 0.8rem;
+  &:hover {
+    cursor: pointer;
+    background: $orange;
+  }
+}

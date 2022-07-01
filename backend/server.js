@@ -6,7 +6,7 @@ import userRoutes from "./routes/userRoutes.js"
 import businessRoutes from "./routes/businessRoutes.js"
 import uploadRoutes from "./routes/uploadRoutes.js"
 import settingsRoutes from "./routes/settingsRoutes.js"
-import serviceRoutes from "./routes/serviceRoutes.js"
+import adminRoutes from "./routes/adminRoutes.js"
 import appointmentsRoutes from "./routes/appointmentsRoutes.js"
 import connectDB from "./config/db.js"
 
@@ -23,7 +23,7 @@ app.use("/api/business", businessRoutes)
 app.use("/api/settings", settingsRoutes)
 app.use("/api/appointments", appointmentsRoutes)
 // app.use("/api/services", serviceRoutes)
-// app.use("/api/admin", serviceRoutes)
+app.use("/api/admin", adminRoutes)
 // app.use("/api/appointments", serviceRoutes)
 app.use("/api/upload", uploadRoutes)
 

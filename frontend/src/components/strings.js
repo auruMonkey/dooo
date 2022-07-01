@@ -72,3 +72,25 @@ export const chappmstr = [
   `Duration`,
   `Price`,
 ]
+export const sumstr = [
+  `Summary`,
+  `Business`,
+  `Please choose location`,
+  `Date & Time`,
+  `Please choose Date & Time`,
+  `Serivces`,
+  `Please choose services`,
+  `Location`,
+]
+export const bamstr = [
+  `Manage your Appointment`,
+  `Services`,
+  `Location`,
+  `Name of Service`,
+  `Price`,
+  `Duration`,
+  `Requested Date & Time`,
+  `Accept Appointment`,
+  `Close`,
+  `Appointment Accepted`,
+]

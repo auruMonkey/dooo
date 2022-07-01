@@ -12,8 +12,11 @@ adminSchema.pre("save", async function (next) {
   this.password = await bcrypt.hash(this.password, salt)
 })
 
-adminSchema.methods.comparePassword = async function (password) {
-  return await bcrypt.compare(password, this.password)
+// adminSchema.methods.comparePassword = async function (password) {
+//   return await bcrypt.compare(password, this.password)
+// }
+adminSchema.methods.matchPassword = async function (enteredPassword) {
+  return await bcrypt.compare(enteredPassword, this.password)
 }
 
 let Admin = mongoose.model("Admin", adminSchema)

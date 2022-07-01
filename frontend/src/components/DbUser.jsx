@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react"
 import { useSelector } from "react-redux"
+import { LinkContainer } from "react-router-bootstrap"
+import { useNavigate, useLocation } from "react-router-dom"
+
 import {
   Container,
   Row,
@@ -19,7 +22,11 @@ const DbUser = () => {
 
   //slicer for user info
   const { userInfo } = useSelector((state) => state.userLogin)
+  //work with browser url
+  const history = useNavigate()
+  const urlLocation = useLocation()
 
+  const typeOfPage = urlLocation.pathname.split("/")[2]
   return (
     <Stack className='m-0 vh-80'>
       <Container>
@@ -32,39 +39,42 @@ const DbUser = () => {
         <Row>
           <Col lg={3} md={5} sm={12} className='border p-0'>
             <ButtonGroup vertical className='w-100 bg-white'>
-              <Button
-                active={btnsState === 1}
-                variant='light'
-                className='menu-btn text-start'
-                onClick={() => setBtnsState(1)}
-              >
-                <i className='bi bi-list-task me-2'></i> Manage Appointments
-              </Button>
-              <Button
-                active={btnsState === 2}
-                variant='light'
-                className='menu-btn text-start'
-                onClick={() => setBtnsState(2)}
-              >
-                <i className='bi bi-calendar3 me-2'></i> My Calendar
-              </Button>
-              <Button
-                active={btnsState === 3}
-                variant='light'
-                className='menu-btn text-start'
-                onClick={() => setBtnsState(3)}
-              >
-                <i className='bi bi-person-circle me-2'></i>Account Manager
-              </Button>
+              <LinkContainer to='/dashboard/manage'>
+                <Button
+                  active={typeOfPage === "manage"}
+                  variant='light'
+                  className='menu-btn text-start'
+                >
+                  <i className='bi bi-list-task me-2'></i> Manage Appointments
+                </Button>
+              </LinkContainer>
+              <LinkContainer to='/dashboard/calendar'>
+                <Button
+                  active={typeOfPage === "calendar"}
+                  variant='light'
+                  className='menu-btn text-start'
+                >
+                  <i className='bi bi-calendar3 me-2'></i> My Calendar
+                </Button>
+              </LinkContainer>
+              <LinkContainer to='/dashboard/account'>
+                <Button
+                  active={typeOfPage === "account"}
+                  variant='light'
+                  className='menu-btn text-start'
+                >
+                  <i className='bi bi-person-circle me-2'></i>Account Manager
+                </Button>
+              </LinkContainer>
             </ButtonGroup>
           </Col>
           <Col lg={9} md={7} sm={12} className='my-4 px-4'>
-            {btnsState === 3 ? (
-              <AccountManager />
-            ) : btnsState === 2 ? (
+            {typeOfPage === "manage" ? (
+              <ManageAppointment />
+            ) : typeOfPage === "calendar" ? (
               <MyCalendar />
             ) : (
-              <ManageAppointment />
+              <AccountManager />
             )}
           </Col>
         </Row>

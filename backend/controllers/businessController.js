@@ -71,8 +71,8 @@ const registerBusiness = asyncHandler(async (req, res) => {
     email: email,
     phone: phonenumber,
     avatar: {
-      path: "https://res.cloudinary.com/deveke/image/upload/v1653260552/xddpnrsnogieb1scfqdz.png",
-      filename: "xddpnrsnogieb1scfqdz",
+      path: "https://res.cloudinary.com/deveke/image/upload/v1656674128/gjyv3tlbq88x4qeuu1q1.jpg",
+      filename: "gjyv3tlbq88x4qeuu1q1",
     },
     joined: new Date(),
     locations: {
@@ -92,6 +92,29 @@ const registerBusiness = asyncHandler(async (req, res) => {
           address: address,
           latitude: lat,
           longitude: lng,
+        },
+        start: {
+          hours: "0",
+          minutes: "0",
+          td: "AM",
+        },
+        end: {
+          hours: "0",
+          minutes: "0",
+          td: "AM",
+        },
+        daysoff: { daysOff: ["Saturday"] },
+        lunch: {
+          start: {
+            hours: "0",
+            minutes: "0",
+            td: "AM",
+          },
+          end: {
+            hours: "0",
+            minutes: "0",
+            td: "AM",
+          },
         },
       },
     ],
@@ -370,6 +393,9 @@ const getBusinesses = asyncHandler(async (req, res) => {
         .skip(pageSize * (page - 1))
     }
   }
+  let g = businesses.filter((o) => o.approved === true)
+  businesses = g
+
   res.json({ businesses, page, pages: Math.ceil(count / pageSize) })
 })
 
@@ -388,6 +414,41 @@ const getBusinesDetails = asyncHandler(async (req, res) => {
 
   res.json(obj)
 })
+
+//@desc  Get Business Appointment
+const getBusinessApnById = asyncHandler(async (req, res) => {
+  const { apnArray } = req.body
+  let apnts = []
+
+  for (let x of apnArray) {
+    //FIND APPOINTMENT
+    const apnt = await Appointment.findById({ _id: x })
+    //FIND USER
+    const usr = await User.findById({ _id: apnt.user })
+    apnts.push({
+      apps: apnt,
+      avatar: usr.avatar.path,
+      phone: usr.phone,
+      name: usr.name,
+      member: usr.joined,
+    })
+  }
+  res.json(apnts)
+})
+
+//@desc  Get Business Appointment
+const acceptBusinessApnById = asyncHandler(async (req, res) => {
+  const { id } = req.body
+
+  //FIND APPOINTMENT
+  const apnt = await Appointment.findByIdAndUpdate(
+    { _id: id },
+    { businessstatus: "Accepted", userstatus: "Accepted" }
+  )
+
+  res.json(apnts)
+})
+
 export {
   registerBusiness,
   authBus,
@@ -403,4 +464,6 @@ export {
   getBusinesDetails,
   makeAppointment,
   businessById,
+  getBusinessApnById,
+  acceptBusinessApnById,
 }

@@ -20,13 +20,21 @@ export const hoursHelper = (address, service) => {
       <span>{close}</span>
       <span>{lunch}</span>
       <Row>
-        {pathS.daysoff.daysOff.map((off, i) => (
-          <div key={i} className='border rounded mx-3 w-auto'>
+        {pathS.daysoff.daysOff.length > 1 ? (
+          pathS.daysoff.daysOff.map((off, i) => (
+            <div key={i} className='border rounded mx-3 w-auto'>
+              <span style={{ fontWeight: "600", fontSize: "0.8rem" }}>
+                {`Off: ${off}`}
+              </span>
+            </div>
+          ))
+        ) : (
+          <div className='border rounded mx-3 w-auto'>
             <span style={{ fontWeight: "600", fontSize: "0.8rem" }}>
-              {`Off: ${off}`}
+              {`Off: ${pathS.daysoff.daysOff[0]}`}
             </span>
           </div>
-        ))}
+        )}
       </Row>
     </>
   )
