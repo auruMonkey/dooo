@@ -2,6 +2,8 @@ import React from "react"
 import { Row } from "react-bootstrap"
 import validator from "validator"
 
+
+
 export const hoursHelper = (address, service) => {
   const pathS = service.schedule.find((x) => x.location.address === address)
   const open = `Open: ${pathS.start.hours}:${pathS.start.minutes}${pathS.start.td}`

@@ -1,4 +1,5 @@
 import { Col, Row } from "react-bootstrap"
+import { bdstr } from "../strings"
 
 export const to24Format = (time) => {
   const min = time.minutes ? Number(time.minutes) : 0
@@ -26,42 +27,40 @@ export const formatDate = (date, dstyle, tstyle) => {
   return formatedDate
 }
 
-export const RendMinutes = ({
-  minArray,
-  appointmentTime,
-  appointmentTimeHandler,
-}) => {
+export const RendMinutes = ({ minArray, bussHour, clickMinHandler }) => {
   return (
     <Row className='m-0'>
-      {appointmentTime !== undefined ? (
+      {bussHour !== undefined ? (
         <>
-          {minArray.map((i) => (
-            <HoursCell key={i.name}>
-              {i.inactive ? (
-                <div
-                  className={"border rounded bd-hours-inactive"}
-                >{`Lunch: ${appointmentTime.hours}:${i.name} `}</div>
-              ) : (
-                <div
-                  className={
-                    appointmentTime.min === Number(i.name)
-                      ? "border rounded bd-hours-active"
-                      : "border rounded bd-hours"
-                  }
-                  onClick={() => {
-                    appointmentTimeHandler({
-                      hours: appointmentTime.hours,
-                      min: Number(i.name),
-                    })
-                  }}
-                >{`${
-                  appointmentTime.hours < 13
-                    ? appointmentTime.hours
-                    : appointmentTime.hours - 12
-                }:${i.name} `}</div>
-              )}
-            </HoursCell>
-          ))}
+          {bussHour.hours !== 0 ? (
+            minArray.map((i) => (
+              <HoursCell key={i.name}>
+                {i.inactive ? (
+                  <div
+                    className={"border rounded bd-hours-inactive"}
+                  >{`Lunch: ${bussHour.hours}:${i.name} `}</div>
+                ) : (
+                  <div
+                    className={
+                      bussHour.min === Number(i.name)
+                        ? "border rounded bd-hours-active"
+                        : "border rounded bd-hours"
+                    }
+                    onClick={() => {
+                      clickMinHandler({
+                        hours: bussHour.hours,
+                        min: Number(i.name),
+                      })
+                    }}
+                  >{`${
+                    bussHour.hours < 13 ? bussHour.hours : bussHour.hours - 12
+                  }:${i.name} `}</div>
+                )}
+              </HoursCell>
+            ))
+          ) : (
+            <strong className='text-warning'>{bdstr[15]}</strong>
+          )}
         </>
       ) : (
         ""

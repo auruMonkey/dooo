@@ -1,0 +1,40 @@
+import { useEffect, useState } from "react"
+import { ListGroup, Row } from "react-bootstrap"
+import { bdstr } from "../strings"
+
+const LocationBD = ({ location, clickLocationHandler, apptLocation }) => {
+  const [apptlocId, setApptLocId] = useState(0)
+
+  useEffect(() => {
+    if (apptLocation !== undefined) {
+      setApptLocId(apptLocation._id)
+    }
+  }, [apptLocation])
+
+  return (
+    <Row className='m-3'>
+      <h6 className='text-dark mt-3'>{bdstr[1]}</h6>
+      <ListGroup as='ul'>
+        {location.map((l) => (
+          <ListGroup.Item
+            as='li'
+            key={l._id}
+            active={l._id === apptlocId}
+            className='schedule-listgroup mt-2 border'
+            onClick={() => clickLocationHandler(l)}
+          >
+            {l._id === apptlocId && (
+              <i
+                className='bi bi-check-circle-fill me-3 '
+                style={{ color: "orange" }}
+              ></i>
+            )}
+            {l.address}
+          </ListGroup.Item>
+        ))}
+      </ListGroup>
+    </Row>
+  )
+}
+
+export default LocationBD

@@ -25,7 +25,6 @@ const ModalAppointment = ({
   appointment,
   setCancelled,
   setCanceled,
-  updateApp,
 }) => {
   const [isEditApp, setIsEditApp] = useState(false)
   const [newAppointment, setNewAppointment] = useState({})
@@ -101,13 +100,11 @@ const ModalAppointment = ({
     handleCloseModal()
     setIsEditApp(false)
     history("/dashboard/manage")
-    updateApp()
   }
   const reschAppHandler = () => {
     newAppointment.location.address = newLocationAddr
     newAppointment.services = newServices
     // newAppointment.datetime = newDateTime
-    console.log("new appointment", newAppointment)
     //SEND TO SERVER UPDATE
     setIsEditApp(false)
   }

@@ -58,12 +58,7 @@ export const abstr = [
   `Already have an account?`,
   `Select a Category`,
 ]
-export const usappstr = [
-  `Pending Appointments`,
-  `Accepted Appointments`,
-  `Completed Appointments`,
-  `Cancelled Appointments`,
-]
+export const usappstr = ` Appointments`
 export const chappmstr = [
   `Change an Appointment`,
   `Choose location`,
@@ -93,4 +88,23 @@ export const bamstr = [
   `Accept Appointment`,
   `Close`,
   `Appointment Accepted`,
+]
+export const bdstr = [
+  `Schedule an Appointment`,
+  `Choose location`,
+  `Summary`,
+  `Business`,
+  `Location`,
+  `Please choose location`,
+  `Choose Your Services`,
+  `Name of Service`,
+  `Duration(min)`,
+  `Price`,
+  `Services`,
+  `Please choose services`,
+  `Date and time`,
+  `Please choose date and time`,
+  `Please choose location first`,
+  `Please choose hour`,
+  `Please choose date`,
 ]

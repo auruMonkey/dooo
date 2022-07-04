@@ -23,7 +23,6 @@ const DropdownCategory = ({ category, setUserServices, setCategoryName }) => {
 
   const getFullName = () => {
     let fn = {}
-    console.log(category)
     if (settingsInfo !== undefined) {
       if (category === undefined) {
         setCategoryName("allbusinesses")
@@ -39,7 +38,6 @@ const DropdownCategory = ({ category, setUserServices, setCategoryName }) => {
           setCategoryNameChosen(fn.name)
         }
         setCategoryName(fn.name)
-        console.log(category)
       }
     }
   }

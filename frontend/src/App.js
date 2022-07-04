@@ -22,9 +22,7 @@ import { getSettings } from "./actions/settingsAction.js"
 
 const App = () => {
   const dispatch = useDispatch()
-  const { loading, settingsInfo, error } = useSelector(
-    (state) => state.settingsUp
-  )
+  const { settingsInfo } = useSelector((state) => state.settingsUp)
 
   //*******set up setting*******
   useEffect(() => {
