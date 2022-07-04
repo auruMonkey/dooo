@@ -19,7 +19,9 @@ const AccordionItems = ({
   useEffect(() => {
     setEkl(() => ek)
     setActl(() => act)
-    setOpenApnl(() => openApn)
+    if (openApn !== []) {
+      setOpenApnl(() => openApn)
+    }
   }, [ek, act, openApn])
 
   return (
@@ -30,9 +32,10 @@ const AccordionItems = ({
     >
       <Accordion.Header>{`${actl} ${usappstr}`}</Accordion.Header>
       <Accordion.Body>
-        {openApnl
-          ? openApnl.map((pa) => (
-              <Row key={pa.addr} className='mb-3'>
+        {openApnl ? (
+          openApnl.length !== 0 ? (
+            openApnl.map((pa) => (
+              <Row key={pa._id} className='mb-3'>
                 <Col lg={1} md={2} xs={12} className='text-start p-0 me-3'>
                   <Image
                     src={pa.avt}
@@ -69,9 +72,11 @@ const AccordionItems = ({
                 </Col>
               </Row>
             ))
-          : ""}
-        {openApnl.length === 0 && (
-          <p className='text-muted'>{`No ${actl} ${usappstr}`}</p>
+          ) : (
+            <p className='text-muted'>{`No ${actl} ${usappstr}`}</p>
+          )
+        ) : (
+          ""
         )}
       </Accordion.Body>
     </Accordion.Item>

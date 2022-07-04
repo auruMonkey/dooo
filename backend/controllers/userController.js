@@ -91,30 +91,23 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 })
 
-//@desc  update user
-//@route POST /api/users/profile
-//@acess Public
+//@desc  get user appointment
 const getAppts = asyncHandler(async (req, res) => {
-  const { appts } = req.body
-  let aps = []
-  let avatBus = []
+  const { appt } = req.body
+  const newArr = []
+  const newArrBus = []
 
-  for (let x of appts) {
-    let objc = {}
-    const findedApp = await Appointment.findById({ _id: x })
+  for (let x of appt) {
+    let findedApp = await Appointment.findOne({ _id: x })
+    if (findedApp !== null) {
+      newArr.push(findedApp)
 
-    aps.push(findedApp)
-  }
-  for (let y of aps) {
-    const findedBus = await Business.findById({ _id: y.business })
-    avatBus.push({
-      avat: findedBus.avatar.path,
-      id: y.business,
-      rating: findedBus.rating,
-    })
+      let findedBus = await Business.findOne({ _id: findedApp.business })
+      newArrBus.push(findedBus)
+    }
   }
 
-  res.json({ aps, avatBus })
+  res.json({ newArr, newArrBus })
 })
 
 export { getUsers, registerUser, authUser, updateUser, getAppts }

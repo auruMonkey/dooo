@@ -9,6 +9,7 @@ import { AccordionItems, formatDate } from "./components/modalAppointment"
 const ManageAppointment = () => {
   const [openApn, setOpenApn] = useState([])
   const [showChangeApp, setShowChangeApp] = useState(false)
+  const [appts, setAppts] = useState()
   const [cngAppId, setCngAppId] = useState("")
 
   const dispatch = useDispatch()
@@ -18,11 +19,16 @@ const ManageAppointment = () => {
 
   useEffect(() => {
     dispatch(getAppointments(userInfo.appointments))
-  }, [dispatch, userInfo.appointments])
+  }, [userInfo])
 
   const { loading, apptsInfo, error } = useSelector(
     (state) => state.userAppointment
   )
+  useEffect(() => {
+    if (apptsInfo !== undefined) {
+      setAppts(apptsInfo)
+    }
+  }, [apptsInfo])
 
   //close modal window
   const handleCloseModal = () => {
@@ -35,22 +41,23 @@ const ManageAppointment = () => {
       setOpenApn([])
       return
     }
-    const filteredApn = apptsInfo.aps.filter((x) => {
+    
+    const filteredApn = appts.newArr.filter((x) => {
       return x.userstatus === str
     })
 
     for (let i of filteredApn) {
       const formatedDT = formatDate(i.datetime, "medium", "short")
-      const avArr = apptsInfo.avatBus.filter((y) => {
-        return y.id === i.business
+      const avArr = appts.newArrBus.filter((y) => {
+        return y._id === i.business
       })
       setOpenApn((old) => [
         ...old,
         {
           idApp: i._id,
-          idBsn: avArr[0].id,
+          idBsn: avArr[0]._id,
           addr: i.location.address,
-          avt: avArr[0].avat,
+          avt: avArr[0].avatar.path,
           datetime: formatedDT,
           status: str,
           rating: avArr[0].rating,

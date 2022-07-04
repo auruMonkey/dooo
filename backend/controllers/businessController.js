@@ -418,6 +418,7 @@ const getBusinesDetails = asyncHandler(async (req, res) => {
 //@desc  Get Business Appointment
 const getBusinessApnById = asyncHandler(async (req, res) => {
   const { apnArray } = req.body
+
   let apnts = []
 
   for (let x of apnArray) {

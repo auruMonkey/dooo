@@ -104,7 +104,7 @@ export const getAppointments = (appts) => async (dispatch) => {
     await axios
       .post(
         "/api/users/appts",
-        { appts },
+        { appt: appts },
         {
           headers: { "Content-type": "application/json" },
         }
