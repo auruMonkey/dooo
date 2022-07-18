@@ -1,8 +1,15 @@
 import ModalTitle from "../modal/ModalTitle"
-import BusinessInfo from "../modal/BusinessInfo"
-import UserInfo from "../modal/UserInfo"
-import Location from "../modal/Location"
-import Services from "../modal/Services"
-import DateTime from "../modal/DateTime"
+import BusinessInfoBD from "./BusinessInfoBD"
+import UserInfoBD from "./UserInfoBD"
+import LocationBD from "./LocationBD"
+import ServicesBD from "./ServicesBD"
+import DateTimeBD from "./DateTimeBD"
 
-export { ModalTitle, BusinessInfo, UserInfo, Location, Services, DateTime }
+export {
+  ModalTitle,
+  BusinessInfoBD,
+  UserInfoBD,
+  LocationBD,
+  ServicesBD,
+  DateTimeBD,
+}

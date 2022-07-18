@@ -2,7 +2,7 @@ import asyncHandler from "express-async-handler"
 import jwt from "jsonwebtoken"
 import Business from "../models/businessModel.js"
 import Appointment from "../models/appointmentModels.js"
-import "../middleware/authMiddleware.js"
+// import "../middleware/authMiddleware.js"
 import User from "../models/userModel.js"
 
 //generate token
@@ -237,17 +237,29 @@ const deleteBusinessService = asyncHandler(async (req, res) => {
 // *******Update service*******
 
 const editBusinessService = asyncHandler(async (req, res) => {
-  const { bid, id, name, duration, price } = req.body
-  const business = await Business.findByIdAndUpdate(id, {
-    $push: {
-      services: {
-        name: name,
-        duration: duration,
-        price: price,
+  const { bid, id, edServ } = req.body
+
+  const tb = await Business.findByIdAndUpdate(
+    { _id: bid },
+    {
+      $pull: {
+        services: { _id: id },
       },
-    },
-  })
-  const updatedBusiness = await Business.findById(id)
+    }
+  )
+  const tbb = await Business.findByIdAndUpdate(
+    { _id: bid },
+    {
+      $push: {
+        services: {
+          name: edServ.name,
+          duration: edServ.duration,
+          price: edServ.price,
+        },
+      },
+    }
+  )
+  const updatedBusiness = await Business.findById(bid)
   res.json(updatedBusiness)
 })
 // *******make appointment*******
@@ -342,21 +354,20 @@ const updateBusinessSchedule = asyncHandler(async (req, res) => {
 //@route POST /api/users/profile
 //@acess Public
 const getBusinesses = asyncHandler(async (req, res) => {
-  const { category, pageNumber } = req.body
-
+  const { category, pageNumber, keyword } = req.body
   //product number in one page
   const pageSize = 10
   const page = Number(pageNumber) || 1
 
   //search validation
-  const keyword = [
-    {
-      category: {
-        $regex: category,
-        $options: "x",
-      },
-    },
-  ]
+  // const keyword = [
+  //   {
+  //     category: {
+  //       $regex: category,
+  //       $options: "x",
+  //     },
+  //   },
+  // ]
   // const keywordD = [
   //   {
   //     businessName: {
@@ -368,33 +379,40 @@ const getBusinesses = asyncHandler(async (req, res) => {
 
   const count = await Business.countDocuments(keyword)
   let businesses = []
-  if (category instanceof Array) {
-    for (let cat in category) {
-      const jk = await Business.find({ category: category[cat].shortName })
-      businesses.push(jk[0])
-    }
-
-    // category.map(async (cat) => {
-    //   const jk = await Business.find({ category: cat.shortName })
-    //   businesses.push(jk)
-    // })
-
-    // businesses = await Business.find({ category: category.shortName })
-    //   .limit(pageSize)
-    //   .skip(pageSize * (page - 1))
+  if (keyword !== "") {
+    const jkk = await Business.find({ category: new RegExp(keyword, "i") })
+    businesses.push(jkk[0])
   } else {
-    if (category === "allbusinesses") {
-      businesses = await Business.find()
-        .limit(pageSize)
-        .skip(pageSize * (page - 1))
+    if (category instanceof Array) {
+      for (let cat in category) {
+        const jk = await Business.find({ category: category[cat].shortName })
+        businesses.push(jk[0])
+      }
+
+      // category.map(async (cat) => {
+      //   const jk = await Business.find({ category: cat.shortName })
+      //   businesses.push(jk)
+      // })
+
+      // businesses = await Business.find({ category: category.shortName })
+      //   .limit(pageSize)
+      //   .skip(pageSize * (page - 1))
     } else {
-      businesses = await Business.find({ category: category })
-        .limit(pageSize)
-        .skip(pageSize * (page - 1))
+      if (category === "allbusinesses") {
+        businesses = await Business.find()
+          .limit(pageSize)
+          .skip(pageSize * (page - 1))
+      } else {
+        businesses = await Business.find({ category: category })
+          .limit(pageSize)
+          .skip(pageSize * (page - 1))
+      }
     }
   }
-  let g = businesses.filter((o) => o.approved === true)
-  businesses = g
+  if (businesses !== undefined && businesses[0] !== undefined) {
+    let g = businesses.filter((o) => o.approved === true)
+    businesses = g
+  }
 
   res.json({ businesses, page, pages: Math.ceil(count / pageSize) })
 })
@@ -418,23 +436,19 @@ const getBusinesDetails = asyncHandler(async (req, res) => {
 //@desc  Get Business Appointment
 const getBusinessApnById = asyncHandler(async (req, res) => {
   const { apnArray } = req.body
-
-  let apnts = []
+  const newArr = []
+  const newArrUser = []
 
   for (let x of apnArray) {
-    //FIND APPOINTMENT
-    const apnt = await Appointment.findById({ _id: x })
-    //FIND USER
-    const usr = await User.findById({ _id: apnt.user })
-    apnts.push({
-      apps: apnt,
-      avatar: usr.avatar.path,
-      phone: usr.phone,
-      name: usr.name,
-      member: usr.joined,
-    })
+    let findedApp = await Appointment.findOne({ _id: x })
+    if (findedApp !== null) {
+      newArr.push(findedApp)
+      let findedBus = await User.findOne({ _id: findedApp.user })
+      newArrUser.push(findedBus)
+    }
   }
-  res.json(apnts)
+
+  res.json({ newArr, newArrUser })
 })
 
 //@desc  Get Business Appointment
@@ -447,7 +461,7 @@ const acceptBusinessApnById = asyncHandler(async (req, res) => {
     { businessstatus: "Accepted", userstatus: "Accepted" }
   )
 
-  res.json(apnts)
+  res.json(apnt)
 })
 
 export {

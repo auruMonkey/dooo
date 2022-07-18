@@ -22,6 +22,7 @@ import Persona from "./Persona"
 import ServicesTable from "./ServicesTable"
 import MapContainer from "./MapContainer"
 import SvgIcon from "./SvgIcon"
+import ButtonPanel from "./ButtonPanel"
 import ButtonShadow from "./UI/ButtonShadow"
 
 export {
@@ -50,4 +51,5 @@ export {
   Persona,
   ServicesTable,
   MapContainer,
+  ButtonPanel,
 }

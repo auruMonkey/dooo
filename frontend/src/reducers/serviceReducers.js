@@ -27,3 +27,14 @@ export const serviceDetailsReducer = (state = {}, action) => {
       return state
   }
 }
+
+export const sendEmailReducer = (state = {}, action) => {
+  switch (action.type) {
+    case "SEND_EMAIL_SUCCESS":
+      return { loading: false, emailStatus: action.payload }
+    case "SEND_EMAIL_FAIL":
+      return { loading: false, error: action.payload }
+    default:
+      return state
+  }
+}

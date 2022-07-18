@@ -6,10 +6,13 @@ import {
   userRegisterReducer,
   userUpdateProfileReducer,
   getUserAppointmentsReducer,
+  updateUserAppointmentReducer,
+  getUserByIdReducer,
 } from "./reducers/userReducers"
 import {
   serviceListReducer,
   serviceDetailsReducer,
+  sendEmailReducer,
 } from "./reducers/serviceReducers"
 import {
   getAppointmentReducer,
@@ -41,6 +44,7 @@ import {
   adminLoginReducer,
   adminFindReducer,
   adminDeleteReducer,
+  adminApproveReducer,
 } from "./reducers/adminReducers"
 //reducers
 const reducer = combineReducers({
@@ -48,6 +52,8 @@ const reducer = combineReducers({
   userRegister: userRegisterReducer,
   userUpdateProfile: userUpdateProfileReducer,
   userAppointment: getUserAppointmentsReducer,
+  getUserById: getUserByIdReducer,
+  updateUserAppointment: updateUserAppointmentReducer,
   serviceList: serviceListReducer,
   serviceDetails: serviceDetailsReducer,
   businessRegister: businessRegisterReducer,
@@ -73,6 +79,8 @@ const reducer = combineReducers({
   adminLogin: adminLoginReducer,
   adminFind: adminFindReducer,
   adminDelete: adminDeleteReducer,
+  adminApprove: adminApproveReducer,
+  sendEmail: sendEmailReducer,
 })
 
 //get initial user info

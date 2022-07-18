@@ -10,26 +10,13 @@ import {
   Stack,
   Carousel,
 } from "react-bootstrap"
-import { ModalBD } from "../components/BusinessDetails"
-
-// import GoogleMapReact from "google-map-react"
+import { ModalBD, MapBD } from "../components/BusinessDetails"
 
 import { listServiceDetails } from "../actions/serviceActions"
-import {
-  Raiting,
-  Loader,
-  Message,
-  Persona,
-  ServicesTable,
-  MapContainer,
-} from "../components"
-import {
-  hoursHelper,
-  addDaysOffCalendar,
-  pickHoursHelper,
-} from "../components/Utils.js"
+import { Raiting, Loader, Message, Persona, ServicesTable } from "../components"
+import { hoursHelper } from "../components/Utils.js"
 
-const BusinessDetails = () => {
+const BusinessDetails = ({ googleKey }) => {
   //const work with ident sertvice
   const { category } = useParams()
   const { id } = useParams()
@@ -44,9 +31,9 @@ const BusinessDetails = () => {
 
   const [location, setLocation] = useState([])
   const [imagesGlr, setImagesGlr] = useState([])
-  const [servicesList, setServicesList] = useState([])
   const [services, setServices] = useState({})
   const [showModal, setShowModal] = useState(false)
+  const [defaultMap, setDefaultMap] = useState()
 
   //load service
   useEffect(() => {
@@ -62,21 +49,48 @@ const BusinessDetails = () => {
       setServices(service)
       setLocation(service.locations.map((s) => s))
       setImagesGlr(service.gallery.map((s) => s))
-      setServicesList(service.services.map((s) => s))
       if (service.locations.length < 2) {
         setDisableButton(() => ({ left: true, right: true }))
       }
     }
   }, [service])
 
+  useEffect(() => {
+    if (location !== undefined) {
+      if (location.length > 0) {
+        setDefaultMap({
+          center: {
+            lat: location[0].latitude,
+            lng: location[0].longitude,
+          },
+          zoom: 11,
+        })
+      }
+    }
+  }, [location])
+
   // handler address change
   const handlAddr = (p) => {
     if (p === "right") {
       setIdLocation(idLocation + 1)
+      setDefaultMap({
+        center: {
+          lat: location[idLocation + 1].latitude,
+          lng: location[idLocation + 1].longitude,
+        },
+        zoom: 11,
+      })
       if (idLocation + 1 === service.locations.length - 1) {
         setDisableButton({ left: false, right: true })
       }
     } else {
+      setDefaultMap({
+        center: {
+          lat: location[idLocation - 1].latitude,
+          lng: location[idLocation - 1].longitude,
+        },
+        zoom: 11,
+      })
       setIdLocation(idLocation - 1)
       if (idLocation - 1 === 0) {
         setDisableButton({ left: true, right: false })
@@ -87,24 +101,6 @@ const BusinessDetails = () => {
     setShowModal(false)
   }
 
-  // *******state for modal*******
-  const [daysOff, setDaysOff] = useState([0, 1])
-  const [dateText, setDateText] = useState("")
-  const [selectedDate, setSelectedDate] = useState()
-
-  //calendar
-  const [startDate, setStartDate] = useState(new Date())
-  const [serviceHFD, setServiceHFD] = useState(0)
-  const [serviceHour, setServiceHour] = useState(0)
-  const [serviceHour24, setServiceHour24] = useState(0)
-  const [serviceMin, setServiceMin] = useState(0)
-
-  // //schedule const
-  const [schServices, setSchServices] = useState([])
-  const [schLocation, setSchLocation] = useState({})
-
-  //declaration of dispatch
-
   //slice userinfo
   const {
     loading: ulLoading,
@@ -114,86 +110,6 @@ const BusinessDetails = () => {
 
   //browser navigation
   const history = useNavigate()
-
-  //handler get day
-  const choseDayHandler = (date) => {
-    setStartDate(date)
-    const options = {
-      weekday: "long",
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    }
-    setDateText(new Intl.DateTimeFormat("en-US", options).format(date))
-  }
-
-  // //click location handler
-  const locationIdHandler = (loc) => {
-    setSchLocation(loc)
-    setDaysOff([])
-    const getDaysOff = service.schedule.find(
-      (x) => x.location.address === loc.address
-    )
-    const arrDOFF = getDaysOff.daysoff.daysOff
-    let fg = []
-    for (let i = 0; i < arrDOFF.length; i++) {
-      if (arrDOFF[i] === "Monday") {
-        fg.push(1)
-      } else if (arrDOFF[i] === "Tuesday") {
-        fg.push(2)
-      } else if (arrDOFF[i] === "Wednesday") {
-        fg.push(3)
-      } else if (arrDOFF[i] === "Thursday") {
-        fg.push(4)
-      } else if (arrDOFF[i] === "Friday") {
-        fg.push(5)
-      } else if (arrDOFF[i] === "Saturday") {
-        fg.push(6)
-      } else if (arrDOFF[i] === "Sunday") {
-        fg.push(0)
-      }
-    }
-    setDaysOff(fg)
-  }
-
-  //check services
-  const checkScheduleServicesId = (id) => {
-    return schServices.find((x) => x._id === id)
-  }
-  //click services handler
-  const handlerScheduleServicesId = (ser) => {
-    if (schServices.find((x) => x._id === ser._id)) {
-      const newArr = schServices.filter((i) => {
-        return i._id !== ser._id
-      })
-      setSchServices(newArr)
-    } else {
-      setSchServices((s) => [...s, ser])
-    }
-  }
-
-  // pickhours
-  const clickPickHoursHandler = (numH) => {
-    setServiceHour24(numH)
-    if (numH < 12) {
-      setServiceHour(numH)
-      setServiceHFD(1)
-    } else if (numH === 12) {
-      setServiceHour(12)
-      setServiceHFD(2)
-    } else {
-      setServiceHour(numH - 12)
-      setServiceHFD(2)
-    }
-  }
-
-  // const defaultProps = {
-  //   center: {
-  //     lat: 34.87542563989993,
-  //     lng: -88.56323787109157,
-  //   },
-  //   zoom: 11,
-  // }
 
   const scheduleHandler = () => {
     if (!userInfo) {
@@ -299,25 +215,11 @@ const BusinessDetails = () => {
                 <div className='h-100 d-flex flex-column my-1 gap-1'>
                   {location.length > 0 &&
                     hoursHelper(location[idLocation].address, services)}
-                  {/*<div className='map-business-detail h-100 p-1'>
-                    <GoogleMapReact
-                      bootstrapURLKeys={{
-                        key: "AIzaSyDXSd1rUGhNijPa_Sbi1Qc5VqCBwsUyXWY",
-                      }}
-                      defaultCenter={defaultProps.center}
-                      defaultZoom={defaultProps.zoom}
-                    >
-                      <div
-                        lat={34.87542563989993}
-                        lng={-88.56323787109157}
-                        className='d-flex flex-row'
-                        style={{ color: "orange", fontSize: "1rem" }}
-                      >
-                        <i className='bi bi-geo-alt-fill '></i>
-                        Business
-                      </div>
-                    </GoogleMapReact>
-                  </div>*/}
+                  <MapBD
+                    googleKey={googleKey}
+                    defaultMap={defaultMap}
+                    service={service}
+                  />
                   <Button
                     variant='dark'
                     className='mt-auto'

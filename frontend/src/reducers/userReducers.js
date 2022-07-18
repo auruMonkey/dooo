@@ -36,6 +36,16 @@ export const getUserAppointmentsReducer = (state = {}, action) => {
       return state
   }
 }
+export const updateUserAppointmentReducer = (state = {}, action) => {
+  switch (action.type) {
+    case "UPDATE_USER_APPOINTMENTS_SUCCESS":
+      return { loading: false, updateAppt: action.payload }
+    case "GET_APPOINTMENTS_FAIL":
+      return { loading: false, error: action.payload }
+    default:
+      return state
+  }
+}
 
 export const userRegisterReducer = (state = {}, action) => {
   switch (action.type) {
@@ -44,6 +54,17 @@ export const userRegisterReducer = (state = {}, action) => {
     case "USER_REGISTER_SUCCESS":
       return { loading: false, userInfo: action.payload }
     case "USER_REGISTER_FAIL":
+      return { loading: false, error: action.payload }
+    default:
+      return state
+  }
+}
+
+export const getUserByIdReducer = (state = {}, action) => {
+  switch (action.type) {
+    case "GET_USER_BY_ID_SUCCESS":
+      return { loading: false, getUserBIDInfo: action.payload }
+    case "GET_USER_BY_ID_FAIL":
       return { loading: false, error: action.payload }
     default:
       return state

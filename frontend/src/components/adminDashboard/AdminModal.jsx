@@ -1,105 +1,65 @@
-import React from "react"
-import { useState } from "react"
-import { useEffect } from "react"
-import { Modal, ListGroup } from "react-bootstrap"
-import { useDispatch } from "react-redux"
-import { Persona } from "../../components"
-import { useNavigate } from "react-router-dom"
-import { deleteMember } from "../../actions"
+import React, { useState, useEffect } from "react"
+import { PreviewBusiness, MainContext } from "../adminDashboard"
 
-const AdminModal = ({ objectM, setShow, show, name, id, keyword }) => {
+const AdminModal = ({
+  objectM,
+  setShowMain,
+  setShowPreview,
+  showMain,
+  showPreview,
+  name,
+  id,
+  deleteMembers,
+  approveHandler,
+  googleKey,
+}) => {
   const [item, setItem] = useState()
+  const [apr, setApr] = useState()
   const [switchFilter, setSwitchFilter] = useState(false)
-  const dispatch = useDispatch()
-  const history = useNavigate()
+  const [toast, setToast] = useState(false)
 
   useEffect(() => {
-    setItem(() => objectM)
-  }, [objectM])
-  const formatPhoneNumber = (phoneNumberString) => {
-    let cleaned = ("" + phoneNumberString).replace(/\D/g, "")
-    let match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/)
-    if (match) {
-      return "(" + match[1] + ") " + match[2] + "-" + match[3]
-    }
-    return null
-  }
+    const showO = objectM.find((x) => x._id === id)
+    setItem(() => showO)
+  }, [])
+
   const deleteClickHandler = () => {
-    dispatch(deleteMember(name, id, keyword, objectM._id))
     setSwitchFilter(true)
-    setShow(false)
-    // history("/admindashboard")
+    setShowMain(false)
+    deleteMembers(name, id, item._id)
+  }
+  const approvedHandler = () => {
+    approveHandler(item._id)
+    setShowMain(false)
   }
 
   return (
-    <Modal show={show} onHide={() => setShow(false)} centered>
-      <Modal.Header>
-        <Modal.Title>Manage Member</Modal.Title>
-      </Modal.Header>
-      <Modal.Body className='bg-white'>
-        <ListGroup className='bg-white'>
-          <ListGroup.Item
-            className='bg-white border-0'
-            style={{ color: "black" }}
-          >
-            <Persona img={objectM.avatar.path} />
-          </ListGroup.Item>
-          {objectM.role === "business" && (
-            <ListGroup.Item
-              className='bg-white border-0'
-              style={{ color: "black" }}
-            >
-              {` Business Name: ${objectM.businessName}`}
-            </ListGroup.Item>
-          )}
-
-          <ListGroup.Item
-            className='bg-white border-0'
-            style={{ color: "black" }}
-          >
-            {` Member ID: ${objectM._id}`}
-          </ListGroup.Item>
-          <ListGroup.Item
-            className='bg-white border-0'
-            style={{ color: "black" }}
-          >
-            {` Name: ${objectM.name}`}
-          </ListGroup.Item>
-          <ListGroup.Item
-            className='bg-white border-0'
-            style={{ color: "black" }}
-          >
-            {`Email: ${objectM.email}`}
-          </ListGroup.Item>
-          <ListGroup.Item
-            className='bg-white border-0'
-            style={{ color: "black" }}
-          >
-            {`Phone: ${formatPhoneNumber(objectM.phone)}`}
-          </ListGroup.Item>
-        </ListGroup>
-      </Modal.Body>
-      <Modal.Footer>
-        <div
-          className={switchFilter ? "tap-button-active" : "tap-button"}
-          onClick={() => deleteClickHandler()}
-        >
-          Delete Member
-        </div>
-        <div
-          className={switchFilter ? "tap-button-active" : "tap-button"}
-          onClick={() => {
-            setSwitchFilter(true)
-            setShow(false)
-          }}
-        >
-          Close <i className='bi bi-x-lg'></i>
-        </div>
-        {/* <Button variant='primary' onClick={handleClose}>
-          Save Changes
-        </Button> */}
-      </Modal.Footer>
-    </Modal>
+    <>
+      {item !== undefined ? (
+        showPreview ? (
+          <PreviewBusiness
+            showPreview={showPreview}
+            setShowPreview={setShowPreview}
+            setShowMain={setShowMain}
+            id={item._id}
+            category={item.category}
+            googleKey={googleKey}
+          />
+        ) : (
+          <MainContext
+            item={item}
+            showMain={showMain}
+            setShowMain={setShowMain}
+            showPreview={showPreview}
+            setShowPreview={setShowPreview}
+            deleteClickHandler={deleteClickHandler}
+            approvedHandler={approvedHandler}
+          />
+        )
+      ) : (
+        ""
+      )}
+    </>
   )
 }
 

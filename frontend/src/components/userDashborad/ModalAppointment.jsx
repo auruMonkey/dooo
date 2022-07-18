@@ -1,197 +1,184 @@
 import { useEffect, useState } from "react"
 import { useSelector, useDispatch } from "react-redux"
-import { Modal } from "react-bootstrap"
-import { chappmstr } from "../strings"
-import { Loader, Message, ButtonShadow } from "../../components"
 import { useNavigate } from "react-router-dom"
-
+import { Modal } from "react-bootstrap"
+import { bdstr } from "../strings"
 import {
-  ChooseService,
-  ChooseLocation,
-  BusinessInfo,
-  UserInfo,
-  DataSelect,
-  Summury,
+  UserInfoUD,
+  BusinessInfoUD,
+  LocationUD,
+  ServicesUD,
+  SummaryUD,
+  DataSelectUD,
 } from "../userDashborad/components/modalAppointment"
-import {
-  getBusinessById,
-  getAppointmentById,
-  cancelAppointmentById,
-} from "../../actions"
+import { Loader, ButtonShadow } from "../../components"
 
 const ModalAppointment = ({
-  show,
+  showModal,
   handleCloseModal,
-  appointment,
-  setCancelled,
-  setCanceled,
+  userInfo,
+  getBusinessInfo,
+  appointmentInfo,
+  reschAppHandler,
+  cancelAppHandler,
+  // updateAppt,
+  // clickAccItemHandler,
 }) => {
+  // const [loading, setLoading] = useState(true)
   const [isEditApp, setIsEditApp] = useState(false)
-  const [newAppointment, setNewAppointment] = useState({})
-  const [newLocationAddr, setNewLocationAddr] = useState("")
-  const [newServices, setNewServices] = useState([])
-  const [newDateTime, setNewDateTime] = useState("")
-  //def dispatch
-  const dispatch = useDispatch()
-  const history = useNavigate()
+  const [businessInfo, setBusinessInfo] = useState({
+    name: getBusinessInfo.businessName,
+    avatar: getBusinessInfo.avatar.path,
+    rating: getBusinessInfo.rating,
+    id: getBusinessInfo._id,
+  })
+  const [location, setLocation] = useState(getBusinessInfo.locations)
+  const [apptLocation, setApptLocation] = useState(appointmentInfo.location)
+  const [services, setServices] = useState(
+    getBusinessInfo.services.map((s) => s)
+  )
+  const [apptServices, setApptServices] = useState(
+    appointmentInfo.services.map((s) => s)
+  )
+  const [apptDateTime, setApptDateTime] = useState(appointmentInfo.datetime)
+  const [apptSchedule, setApptSchedule] = useState()
 
   useEffect(() => {
-    dispatch(getAppointmentById(appointment.idApp))
-    dispatch(getBusinessById(appointment.idBsn))
-  }, [appointment, dispatch])
+    const temp = getBusinessInfo.schedule.find(
+      (x) => x.location.address === appointmentInfo.location.address
+    )
+    setApptSchedule(temp)
+    //     setLoading(false)
+  }, [appointmentInfo.location.address, getBusinessInfo.schedule])
 
-  //appointment selector
-  const {
-    loading: loadApt,
-    error: errApt,
-    appointmentInfo,
-  } = useSelector((state) => state.getAppointment)
 
-  //   //slice userinfo
-  const {
-    loading: loadUsr,
-    error: errUsr,
-    userInfo,
-  } = useSelector((state) => state.userLogin)
-  //   //slice business
-  const {
-    loading: loadBsn,
-    error: errBsn,
-    getBusinessInfo,
-  } = useSelector((state) => state.getBusinessById)
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setNewAppointment(appointmentInfo)
-      setNewLocationAddr(appointmentInfo.location.address)
-    }, 1000)
-    return () => clearTimeout(timer)
-  }, [appointmentInfo])
-
-  const newLocation = (loc) => {
-    setNewLocationAddr(loc.address)
+  const clickLocationHandler = (loc) => {
+    setApptLocation(loc)
+    if (loc) {
+      const temp = getBusinessInfo.schedule.find(
+        (x) => x.location.address === loc.address
+      )
+      setApptSchedule(temp)
+    }
   }
-  const newServicesHandle = (ser) => {
-    setNewServices(ser)
-  }
-  const setNewDateHandler = (date) => {
-    const nd = date.toISOString()
-    setNewDateTime(nd)
+  const clickServiceHandler = (ser) => {
+    if (apptServices.findIndex((s) => s._id === ser._id) > -1) {
+      const temp = apptServices.filter((s) => s._id !== ser._id)
+      setApptServices(temp)
+    } else {
+      setApptServices((old) => [...old, ser])
+    }
   }
 
-  const closeModalHandle = () => {
-    handleCloseModal()
+  const clickDateHandler = (date) => {
+    setApptDateTime(date)
   }
-  const manageAppClickHandler = () => {
-    setIsEditApp(true)
-    setNewAppointment(appointmentInfo)
-  }
+
   const cancelUpdateAppHandler = () => {
-    setNewAppointment(appointmentInfo)
-    setNewLocationAddr(appointmentInfo.location.address)
-    setNewServices(appointmentInfo.services)
-    setNewDateTime(appointmentInfo.datetime)
-    setIsEditApp(false)
-    handleCloseModal()
-  }
-  //Cancel appointment
-  const cancelAppHandler = () => {
-    dispatch(cancelAppointmentById(appointment.idApp))
-    handleCloseModal()
-    setIsEditApp(false)
-    history("/dashboard/manage")
-  }
-  const reschAppHandler = () => {
-    newAppointment.location.address = newLocationAddr
-    newAppointment.services = newServices
-    // newAppointment.datetime = newDateTime
-    //SEND TO SERVER UPDATE
+    setApptLocation(appointmentInfo.location)
+    setApptServices(appointmentInfo.services.map((s) => s))
+    const temp = getBusinessInfo.schedule.find(
+      (x) => x.location.address === appointmentInfo.location.address
+    )
+    clickDateHandler(appointmentInfo.datetime)
+    setApptSchedule(temp)
     setIsEditApp(false)
   }
 
+  const resAppt = () => {
+    const tempAppt = appointmentInfo
+    tempAppt.location = {
+      address: apptLocation.address,
+      latitude: apptLocation.latitude,
+      longitude: apptLocation.longitude,
+    }
+    tempAppt.services = apptServices
+    tempAppt.datetime = apptDateTime.toISOString()
+    reschAppHandler(tempAppt, businessInfo)
+    setIsEditApp(false)
+  }
+
+  const cnclAppt = () => {
+    cancelAppHandler(appointmentInfo)
+    setIsEditApp(false)
+  }
   return (
     <Modal
-      show={show}
-      onHide={closeModalHandle}
+      show={showModal}
+      onHide={handleCloseModal}
       backdrop='static'
       centered
       size='xl'
       className='modal-dialog-scrollable text-dark'
     >
-      {errApt && <Message variant='danger'>{errApt}</Message>}
-      {errUsr && <Message variant='danger'>{errUsr}</Message>}
-      {errBsn && <Message variant='danger'>{errBsn}</Message>}
-      {loadApt || loadUsr || loadBsn || <Loader />}
-      <div className='bg-white'>
-        {/* *******Header******* */}
-        <Modal.Header closeButton className='btn-close-white border-0'>
-          <Modal.Title as='h6' style={{ color: "#ffffff" }}>
-            {chappmstr[0]}
-          </Modal.Title>
-        </Modal.Header>
-        {/* *******Body******* */}
-        <Modal.Body className='text-dark d-flex flex-column min-vh-100'>
-          {!getBusinessInfo ||
-          !userInfo ||
-          !appointmentInfo ||
-          newAppointment === undefined ? (
-            <Loader />
-          ) : (
-            <>
-              <UserInfo avatar={userInfo.avatar.path} name={userInfo.name} />
-              <hr className='border' />
-              <BusinessInfo
-                avatar={getBusinessInfo.avatar.path}
-                rating={getBusinessInfo.rating}
-                address={newLocationAddr}
-              />
+      {/* *******Header******* */}
+      <Modal.Header closeButton className='btn-close-white border-0'>
+        <Modal.Title as='h6' style={{ color: "#ffffff" }}>
+          {bdstr[0]}
+        </Modal.Title>
+      </Modal.Header>
+      {/* *******Body******* */}
 
-              <hr className='border' />
-              <ChooseLocation
-                locationB={getBusinessInfo.locations}
-                locationA={newLocationAddr}
-                newLocation={newLocation}
-                isEditApp={isEditApp}
+      <Modal.Body className='text-dark d-flex flex-column min-vh-100'>
+        {/* {loading ? (
+          <Loader />
+        ) : ( */}
+        <>
+          <UserInfoUD avatar={userInfo.avatar.path} name={userInfo.name} />
+          <hr className='border' />
+          <BusinessInfoUD
+            avatar={businessInfo.avatar}
+            name={businessInfo.name}
+            rating={businessInfo.rating}
+          />
+          <hr className='border' />
+          <div className={isEditApp ? "modal-inactive" : "modal-active"}>
+            <LocationUD
+              location={location}
+              clickLocationHandler={clickLocationHandler}
+              apptLocation={apptLocation}
+            />
+          </div>
+          <hr className='border' />
+          <div className={isEditApp ? "modal-inactive" : "modal-active"}>
+            <ServicesUD
+              services={services}
+              clickServiceHandler={clickServiceHandler}
+              apptServices={apptServices}
+            />
+          </div>
+          <hr className='border' />
+          <div className={isEditApp ? "modal-inactive" : "modal-active"}>
+            {apptSchedule !== undefined && (
+              <DataSelectUD
+                clickDateHandler={clickDateHandler}
+                apptDateTime={apptDateTime}
+                locationDOF={apptSchedule}
               />
-              <hr className='border' />
-              <ChooseService
-                servicesB={getBusinessInfo.services}
-                servicesA={newAppointment.services}
-                newServicesHandle={newServicesHandle}
-                isEditApp={isEditApp}
-              />
-              <hr className='border' />
-              <DataSelect
-                appointment={newAppointment}
-                scheduleB={getBusinessInfo.schedule}
-                setNewDateHandler={setNewDateHandler}
-                isEditApp={isEditApp}
-              />
+            )}
+          </div>
+          <hr className='border' />
+          <SummaryUD
+            name={businessInfo.name}
+            location={apptLocation}
+            services={apptServices}
+            apptDateTime={apptDateTime}
+          />
+        </>
+      </Modal.Body>
 
-              <hr className='border' />
-              <Summury
-                newAppointment={newAppointment}
-                businessName={getBusinessInfo.businessName}
-                newLocationAddr={newLocationAddr}
-                newServices={newServices}
-                // newDateText={newDateText}
-                isEditApp={isEditApp}
-              />
-              <hr className='border' />
-            </>
-          )}
-        </Modal.Body>
-        {/* *******Footer****** */}
-        <Modal.Footer
-          as='div'
-          className='mt-auto d-flex justify-content-start m-2'
-        >
-          {!isEditApp ? (
+      {/* *******Footer****** */}
+      <Modal.Footer
+        as='div'
+        className='mt-auto d-flex justify-content-start m-2'
+      >
+        {appointmentInfo.userstatus === "Pending" ? (
+          !isEditApp ? (
             <ButtonShadow
               text='Manage Appointment'
               color='#0047AB'
               icon='bi bi-alarm-fill ms-2'
-              handleOnClick={manageAppClickHandler}
+              handleOnClick={() => setIsEditApp(true)}
             />
           ) : (
             <div className='d-flex flex-row w-100'>
@@ -209,7 +196,7 @@ const ModalAppointment = ({
                     text='Reschedule Appointment'
                     color='#008000'
                     icon='bi bi-alarm-fill ms-2'
-                    handleOnClick={reschAppHandler}
+                    handleOnClick={resAppt}
                   />
                 </div>
                 <div>
@@ -218,14 +205,24 @@ const ModalAppointment = ({
                     color='#fff'
                     bgcolor='#c72525'
                     icon='bi bi-trash3-fill ms-2'
-                    handleOnClick={cancelAppHandler}
+                    handleOnClick={cnclAppt}
                   />
                 </div>
               </div>
             </div>
-          )}
-        </Modal.Footer>
-      </div>
+          )
+        ) : (
+          <div>
+            <ButtonShadow
+              text='Close'
+              color='#fff'
+              bgcolor='#c72525'
+              icon='bi bi-trash3-fill ms-2'
+              handleOnClick={handleCloseModal}
+            />
+          </div>
+        )}
+      </Modal.Footer>
     </Modal>
   )
 }

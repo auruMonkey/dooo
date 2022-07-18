@@ -1,63 +1,54 @@
 import { useState, useEffect, useRef } from "react"
 import { Button, Row, Col } from "react-bootstrap"
-import { useSelector, useDispatch } from "react-redux"
-import {
-  addService,
-  deleteService,
-  editService,
-} from "../../actions/businessActions"
-import { ListGroup } from "react-bootstrap"
-import { Form } from "react-bootstrap"
+import { useSelector } from "react-redux"
+import { ListGroup, Form } from "react-bootstrap"
 
-const BusinessServices = () => {
-  const [isEditService, setIsEditService] = useState()
-  const [newPrice, setNewPrice] = useState()
-  const [newDuration, setNewDuration] = useState()
-  const [newName, setNewName] = useState()
-  //constante to work with add services
-  const [isEdit, setIsEdit] = useState(false)
-  // constante to get services
+const BusinessServices = ({
+  editServiceHandler,
+  deleteServiceHandler,
+  addServiceHandler,
+}) => {
   const [allServices, setAllServices] = useState([])
-  //constante to work with new service
-  const [newService, setNewService] = useState({})
+  const [isEditService, setIsEditService] = useState()
+  const [newName, setNewName] = useState()
+  const [newDuration, setNewDuration] = useState()
+  const [newPrice, setNewPrice] = useState()
+  const [isEdit, setIsEdit] = useState(false)
   const [errors, setErrors] = useState({})
+  const [newService, setNewService] = useState({})
 
-  // *********** slicer for business information
-  const { businessInfo } = useSelector((state) => state.businessLogin)
-  const dispatch = useDispatch()
+  //  const dispatch = useDispatch()
+  const { businessInfo, loading } = useSelector((state) => state.businessLogin)
 
   useEffect(() => {
-    setAllServices(businessInfo.services)
-  }, [setAllServices, businessInfo])
+    if (businessInfo !== undefined) {
+      setAllServices(businessInfo.services)
+    }
+  }, [businessInfo])
 
-  //cancel to add services handler
   const cancelHandler = () => {
     setIsEdit(false)
-    setNewService("")
+    setNewService({})
     setErrors({})
   }
-  //cancel to edit services handler
+
   const cancelEditHandler = () => {
     setIsEditService()
     setNewPrice()
     setNewDuration()
     setNewName()
   }
-  //validation form function
+
   const validateForm = () => {
-    //const for work with form
     const { name, duration, price } = newService
     const newErrors = {}
 
-    //check name
     if (name === undefined) {
       newErrors.name = "Please enter Name of service"
     }
-    //check duration
     if (duration === undefined) {
       newErrors.duration = "Please enter duration"
     }
-    //check price
     if (price === undefined) {
       newErrors.price = "Please enter price"
     }
@@ -65,30 +56,30 @@ const BusinessServices = () => {
     return newErrors
   }
 
-  //add services handler
-  const addServiceHandler = () => {
+  const addServicesHandler = () => {
     const formErrors = validateForm()
     if (Object.keys(formErrors).length > 0) {
       setErrors(formErrors)
     } else {
-      dispatch(
-        addService(
-          businessInfo._id,
-          newService.name,
-          newService.duration,
-          newService.price
-        )
+      addServiceHandler(
+        businessInfo._id,
+        newService.name,
+        newService.duration,
+        newService.price
       )
+
       setErrors({})
       setIsEdit(false)
     }
   }
-  // *********** delete Service handler
-  const deleteServiceHandler = (id) => {
-    dispatch(deleteService(businessInfo._id, id))
+
+  const deleteServicesHandler = (id) => {
+    deleteServiceHandler(businessInfo._id, id)
   }
-  // *********** edit Service handler
-  const editServiceHandler = (id, name, duration, price) => {
+
+  const editServicesHandler = (id, name, duration, price) => {
+    const nas = allServices.find((x) => x._id !== id)
+
     let edServ = { name: name, duration: duration, price: price }
     if (newName) {
       edServ.name = newName
@@ -99,16 +90,7 @@ const BusinessServices = () => {
     if (newDuration) {
       edServ.duration = newDuration
     }
-
-    dispatch(
-      editService(
-        businessInfo._id,
-        id,
-        edServ.name,
-        edServ.duration,
-        edServ.price
-      )
-    )
+    editServiceHandler(id, edServ)
   }
 
   return (
@@ -197,14 +179,12 @@ const BusinessServices = () => {
                   />
                 </Col>
                 <Col className='text-end'>
-                  {/* **************************** */}
                   {isEditService !== s._id ? (
                     <Button
                       type='button'
                       variant='light'
                       className='px-3 me-3 bg-white border-0 shadow text-secondary'
                       onClick={() => setIsEditService(s._id)}
-                      // onClick={() => deleteServiceHandler(s._id)}
                     >
                       <i className='bi bi-pencil-fill'></i>
                     </Button>
@@ -221,7 +201,12 @@ const BusinessServices = () => {
                           width: "auto",
                         }}
                         onClick={() =>
-                          editServiceHandler(s._id, s.name, s.duration, s.price)
+                          editServicesHandler(
+                            s._id,
+                            s.name,
+                            s.duration,
+                            s.price
+                          )
                         }
                       >
                         Save<i className='fa-solid fa-floppy-disk ms-2'></i>
@@ -241,12 +226,11 @@ const BusinessServices = () => {
                       </Button>
                     </>
                   )}
-                  {/* *********************** */}
 
                   <Button
                     variant='danger'
                     className='px-3 '
-                    onClick={() => deleteServiceHandler(s._id)}
+                    onClick={() => deleteServicesHandler(s._id)}
                   >
                     <i className='bi bi-x-lg'></i>
                   </Button>
@@ -275,6 +259,7 @@ const BusinessServices = () => {
       ) : (
         <>
           <Row className='w-100'>
+            <h6 className='text-dark'>New Service</h6>
             <Col lg={4} md={4} xs={5}>
               <Form.Group>
                 <Form.Control
@@ -335,7 +320,7 @@ const BusinessServices = () => {
                 border: "none",
                 width: "auto",
               }}
-              onClick={() => addServiceHandler()}
+              onClick={() => addServicesHandler()}
             >
               Save<i className='fa-solid fa-floppy-disk ms-2'></i>
             </Button>

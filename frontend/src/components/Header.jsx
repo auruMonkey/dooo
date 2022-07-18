@@ -1,34 +1,22 @@
-import React from "react"
-import {
-  Container,
-  Navbar,
-  Nav,
-  Button,
-  Dropdown,
-  ButtonGroup,
-  Image,
-  Stack,
-} from "react-bootstrap"
+import React, { useEffect, useState } from "react"
+import { Container, Navbar, Nav } from "react-bootstrap"
 import { LinkContainer } from "react-router-bootstrap"
 import { useDispatch, useSelector } from "react-redux"
-import Logo from "../components/Logo"
-import { logout } from "../actions/userActions"
-import { logoutB } from "../actions/businessActions"
+import { ButtonPanel, Logo } from "../components"
+import { logout, logoutB } from "../actions"
 
 const Header = () => {
   //defined dispatch
   const dispatch = useDispatch()
-
   //slicer for user info
-  const { userInfo } = useSelector((state) => state.userLogin)
-  const { businessInfo } = useSelector((state) => state.businessLogin)
 
-  //logout handler
-  const logoutHandler = () => {
-    if (userInfo) {
+  const logoutHandlers = (str) => {
+    if (str === "user") {
       dispatch(logout())
-    } else {
+    } else if (str === "bus") {
       dispatch(logoutB())
+    } else if (str === "admin") {
+      window.sessionStorage.removeItem("adminInfo")
     }
   }
 
@@ -68,81 +56,14 @@ const Header = () => {
                 </LinkContainer>
               </Nav.Item>
             </Nav>
-            {userInfo ? (
-              <>
-                <Image
-                  src={userInfo.avatar.path ? userInfo.avatar.path : ""}
-                  className='header-avatar'
-                />
 
-                <Dropdown as={ButtonGroup}>
-                  <Dropdown.Toggle
-                    id='dropdown-user'
-                    variant='dark-outline'
-                    className='dropdown-btn-menu btn-sm ms-4'
-                  >
-                    <span>Menu</span>
-                  </Dropdown.Toggle>
-                  <Dropdown.Menu variant='dark'>
-                    <>
-                      <LinkContainer to='/dashboard'>
-                        <Dropdown.Item>Dashboard</Dropdown.Item>
-                      </LinkContainer>
-                      <LinkContainer to='/'>
-                        <Dropdown.Item onClick={logoutHandler}>
-                          Sign Out
-                        </Dropdown.Item>
-                      </LinkContainer>
-                    </>
-                  </Dropdown.Menu>
-                </Dropdown>
-              </>
-            ) : businessInfo ? (
-              <>
-                <Image
-                  src={businessInfo.avatar.path}
-                  className='header-avatar'
-                />
-
-                <Dropdown as={ButtonGroup}>
-                  <Dropdown.Toggle
-                    id='dropdown-user'
-                    variant='dark-outline'
-                    className='dropdown-btn-menu btn-sm ms-4'
-                  >
-                    <span>Menu</span>
-                  </Dropdown.Toggle>
-                  <Dropdown.Menu variant='dark'>
-                    <>
-                      <LinkContainer to='/dashboard'>
-                        <Dropdown.Item>Dashboard</Dropdown.Item>
-                      </LinkContainer>
-                      <LinkContainer to='/'>
-                        <Dropdown.Item onClick={logoutHandler}>
-                          Sign Out
-                        </Dropdown.Item>
-                      </LinkContainer>
-                    </>
-                  </Dropdown.Menu>
-                </Dropdown>
-              </>
-            ) : (
-              <Stack direction='horizontal'>
-                <LinkContainer to='/signin/user'>
-                  <Button
-                    variant='outline-dark'
-                    className='me-4 btn-sm btn-crack'
-                  >
-                    User Sign Up/Sign In
-                  </Button>
-                </LinkContainer>
-                <LinkContainer to='/signin/business'>
-                  <Button variant='warning' className='btn-sm'>
-                    Business Sign Up/Sign In
-                  </Button>
-                </LinkContainer>
-              </Stack>
-            )}
+            {
+              <ButtonPanel
+                // userInfo={userInfo}
+                // businessInfo={businessInfo}
+                logoutHandlers={logoutHandlers}
+              />
+            }
           </Navbar.Collapse>
         </Container>
       </Navbar>

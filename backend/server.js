@@ -4,6 +4,7 @@ import dotenv from "dotenv"
 import { errorHandler, notFound } from "./middleware/errorMiddleware.js"
 import userRoutes from "./routes/userRoutes.js"
 import businessRoutes from "./routes/businessRoutes.js"
+import serviceRoutes from "./routes/serviceRoutes.js"
 import uploadRoutes from "./routes/uploadRoutes.js"
 import settingsRoutes from "./routes/settingsRoutes.js"
 import adminRoutes from "./routes/adminRoutes.js"
@@ -22,7 +23,7 @@ app.use("/api/users", userRoutes)
 app.use("/api/business", businessRoutes)
 app.use("/api/settings", settingsRoutes)
 app.use("/api/appointments", appointmentsRoutes)
-// app.use("/api/services", serviceRoutes)
+app.use("/api/services", serviceRoutes)
 app.use("/api/admin", adminRoutes)
 // app.use("/api/appointments", serviceRoutes)
 app.use("/api/upload", uploadRoutes)

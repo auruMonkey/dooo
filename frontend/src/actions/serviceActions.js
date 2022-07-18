@@ -12,13 +12,11 @@ export const listServices =
           "Content-type": "application/json",
         },
       }
-      if (category !== "") {
-        await axios
-          .post("/api/business/all", { category, pageNumber }, config)
-          .then((response) => {
-            dispatch({ type: "SERVICE_LIST_SUCCESS", payload: response.data })
-          })
-      }
+      await axios
+        .post("/api/business/all", { category, pageNumber, keyword }, config)
+        .then((response) => {
+          dispatch({ type: "SERVICE_LIST_SUCCESS", payload: response.data })
+        })
     } catch (error) {
       dispatch({
         type: "SERVICE_LIST_FAIL",
@@ -90,3 +88,29 @@ export const makeAppointment =
       })
     }
   }
+
+export const sendEmail = (form) => async (dispatch) => {
+  try {
+    await axios
+      .post(
+        "/api/services/mail",
+        { form },
+        {
+          headers: {
+            "Content-type": "application/json",
+          },
+        }
+      )
+      .then((response) => {
+        dispatch({ type: "SEND_EMAIL_SUCCESS", payload: response.date })
+      })
+  } catch (error) {
+    dispatch({
+      type: "USER_LOGIN_FAIL",
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    })
+  }
+}

@@ -24,8 +24,9 @@ import {
   addDaysOffCalendar,
   pickHoursHelper,
 } from "../components/Utils.js"
+import GoogleMapReact from "google-map-react"
 
-const BusinessPreview = () => {
+const BusinessPreview = ({ googleKey }) => {
   const { category } = useParams()
   const { id } = useParams()
   const dispatch = useDispatch()
@@ -39,6 +40,7 @@ const BusinessPreview = () => {
   const [imagesGlr, setImagesGlr] = useState([])
   const [servicesList, setServicesList] = useState([])
   const [services, setServices] = useState({})
+  const [defaultMap, setDefaultMap] = useState()
 
   //load service
   useEffect(() => {
@@ -61,14 +63,42 @@ const BusinessPreview = () => {
       }
     }
   }, [service])
+
+  useEffect(() => {
+    if (location !== undefined) {
+      if (location.length > 0) {
+        setDefaultMap({
+          center: {
+            lat: location[0].latitude,
+            lng: location[0].longitude,
+          },
+          zoom: 11,
+        })
+      }
+    }
+  }, [location])
   // handler address change
   const handlAddr = (p) => {
     if (p === "right") {
       setIdLocation(idLocation + 1)
+      setDefaultMap({
+        center: {
+          lat: location[idLocation + 1].latitude,
+          lng: location[idLocation + 1].longitude,
+        },
+        zoom: 11,
+      })
       if (idLocation + 1 === service.locations.length - 1) {
         setDisableButton({ left: false, right: true })
       }
     } else {
+      setDefaultMap({
+        center: {
+          lat: location[idLocation - 1].latitude,
+          lng: location[idLocation - 1].longitude,
+        },
+        zoom: 11,
+      })
       setIdLocation(idLocation - 1)
       if (idLocation - 1 === 0) {
         setDisableButton({ left: true, right: false })
@@ -172,27 +202,29 @@ const BusinessPreview = () => {
                 <div className='h-100 d-flex flex-column my-1 gap-1'>
                   {location.length > 0 &&
                     hoursHelper(location[idLocation].address, services)}
-                  {/*<div className='map-business-detail h-100 p-1'>
-                    <GoogleMapReact
-                      bootstrapURLKeys={{
-                        key: "AIzaSyDXSd1rUGhNijPa_Sbi1Qc5VqCBwsUyXWY",
-                      }}
-                      defaultCenter={defaultProps.center}
-                      defaultZoom={defaultProps.zoom}
-                    >
-                      <div
-                        lat={34.87542563989993}
-                        lng={-88.56323787109157}
-                        className='d-flex flex-row'
-                        style={{ color: "orange", fontSize: "1rem" }}
+                  <div className='map-business-detail h-100 p-1'>
+                    {defaultMap !== undefined && (
+                      <GoogleMapReact
+                        bootstrapURLKeys={{
+                          key: googleKey,
+                        }}
+                        center={defaultMap.center}
+                        defaultZoom={defaultMap.zoom}
                       >
-                        <i className='bi bi-geo-alt-fill '></i>
-                        Business
-                      </div>
-                    </GoogleMapReact>
-                  </div>*/}
+                        <div
+                          lat={defaultMap.lat}
+                          lng={defaultMap.lng}
+                          className='d-flex flex-row'
+                          style={{ color: "orange", fontSize: "1rem" }}
+                        >
+                          <i className='bi bi-geo-alt-fill '></i>
+                          Business
+                        </div>
+                      </GoogleMapReact>
+                    )}
+                  </div>
                   <Button variant='dark' className='mt-auto'>
-                    This is just preview
+                    This is just a preview
                     <i className='bi bi-alarm-fill ms-2'></i>
                   </Button>
                 </div>

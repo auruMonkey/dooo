@@ -1,109 +1,168 @@
 import React from "react"
 import { useEffect, useState } from "react"
 import { Accordion, Modal, Button } from "react-bootstrap"
-import { Loader, Message } from "../../../components"
 import ApnAccordionItem from "../components/ApnAccordionItem"
-import { bamstr } from "../../strings"
+import ModalApn from "./ModalApn"
+import { useDispatch, useSelector } from "react-redux"
+import {
+  getAppointmentById,
+  getUserById,
+  acceptBusinessApn,
+} from "../../../actions"
+import { formatDate } from "../../userDashborad/components/modalAppointment"
 
-const ApnAccordion = ({ businessApnInfo }) => {
+const ApnAccordion = ({ businessApnInfo, businessInfo }) => {
+  const [showModal, setShowModal] = useState(false)
+  const [pendingAppts, setPendingAppts] = useState()
+  const [acceptedAppts, setAcceptedAppts] = useState()
+  const [completedAppts, setCompletedAppts] = useState()
+  const [canceledAppts, setCanceledAppts] = useState()
+  const [canceledInfoAppts, setCanceledinfoAppts] = useState()
+  const [pendingInfoAppts, setPendingInfoAppts] = useState()
+  const [acceptedInfoAppts, setAcceptedInfoAppts] = useState()
+  const [completedInfoAppts, setCompletedInfoAppts] = useState()
+  const dispatch = useDispatch()
   const [inApn, setInApn] = useState([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [pendApn, setPendApn] = useState([])
-  const [accdApn, setAccApn] = useState([])
-  const [compdApn, setCompApn] = useState([])
-  const [cancdApn, setCancApn] = useState([])
+  const { appointmentInfo } = useSelector((state) => state.getAppointment)
+  const { getUserBIDInfo } = useSelector((state) => state.getUserById)
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      if (businessApnInfo !== undefined) {
-        setInApn(businessApnInfo)
-        setIsLoading(false)
+    if (businessApnInfo !== undefined) {
+      setPendingAppts()
+      setAcceptedAppts()
+      setCompletedAppts()
+      setCanceledAppts()
+      const pendArr = getArrAppts("Pending")
+      const acceArr = getArrAppts("Accepted")
+      const compArr = getArrAppts("Completed")
+      const cancArr = getArrAppts("Cancelled")
+      if (pendingAppts === undefined) {
+        setPendingAppts(pendArr)
       }
-    }, 100)
-    return () => clearTimeout(timer)
-  }, [businessApnInfo, setInApn])
-
-  const onClickHandler = (str) => {
-    if (inApn) {
-      const hhh = inApn.filter((x) => {
-        return x.apps.businessstatus === str
-      })
-      for (let i of hhh) {
-        if (str === "Pending" && pendApn.length === 0) {
-          setPendApn((old) => [...old, i])
-        }
-        if (str === "Accepted" && accdApn.length === 0) {
-          setAccApn((old) => [...old, i])
-        }
-        if (str === "Completed" && compdApn.length === 0) {
-          setCompApn((old) => [...old, i])
-        }
-        if (str === "Cancelled" && cancdApn.length === 0) {
-          setCancApn((old) => [...old, i])
-        }
+      if (acceptedAppts === undefined) {
+        setAcceptedAppts(acceArr)
+      }
+      if (completedAppts === undefined) {
+        setCompletedAppts(compArr)
+      }
+      if (canceledAppts === undefined) {
+        setCanceledAppts(cancArr)
       }
     }
+  }, [businessApnInfo, setInApn])
+
+  useEffect(() => {
+    if (pendingAppts !== undefined) {
+      const tb = getUserInfo(pendingAppts, "Pending")
+      setPendingInfoAppts(tb)
+    }
+    if (acceptedAppts !== undefined) {
+      const tb = getUserInfo(acceptedAppts, "Accepted")
+      setAcceptedInfoAppts(tb)
+    }
+    if (completedAppts !== undefined) {
+      const tb = getUserInfo(completedAppts, "Completed")
+      setCompletedInfoAppts(tb)
+    }
+    if (canceledAppts !== undefined) {
+      const tb = getUserInfo(canceledAppts, "Cancelled")
+      setCanceledinfoAppts(tb)
+    }
+  }, [pendingAppts, acceptedAppts, completedAppts, canceledAppts])
+
+  const getArrAppts = (str) => {
+    const filteredApn = businessApnInfo.newArr.filter((x) => {
+      return x.businessstatus === str
+    })
+    return filteredApn
+  }
+
+  const getUserInfo = (arr, str) => {
+    let openApp = []
+    for (let i of arr) {
+      const formatedDT = formatDate(i.datetime, "medium", "short")
+      const avArr = businessApnInfo.newArrUser.filter((y) => {
+        return y._id === i.user
+      })
+      openApp.push({
+        idApp: i._id,
+        idBsn: avArr[0]._id,
+        phone: i.location.address,
+        avt: avArr[0].avatar.path,
+        datetime: formatedDT,
+        status: str,
+        name: avArr[0].name,
+        phone: avArr[0].phone,
+      })
+    }
+    return openApp
+  }
+
+  const openModal = (pa) => {
+    dispatch(getAppointmentById(pa.idApp))
+    dispatch(getUserById(pa.idBsn))
+    setShowModal(true)
+  }
+  const handleCloseModal = () => {
+    setShowModal(false)
+  }
+  const acceptAppointmentHandler = (id) => {
+    const newPendingAppt = pendingInfoAppts.filter((f) => f.idApp !== id)
+    setPendingInfoAppts(newPendingAppt)
+    const newAcceptAppt = pendingInfoAppts.filter((f) => f.idApp === id)
+    setAcceptedInfoAppts(newAcceptAppt)
+
+    dispatch(acceptBusinessApn(appointmentInfo._id))
+    setShowModal(false)
   }
 
   return (
     <>
-      {isLoading ? (
-        <>
-          <h5 style={{ color: "black" }}>My Appointments</h5>
+      <h5 style={{ color: "black" }}>My Appointments</h5>
 
-          <Accordion>
-            <ApnAccordionItem
-              name='Pending'
-              onClickHandler={onClickHandler}
-              index={0}
-              apnArr={pendApn}
-              icon='bi bi-clock-fill'
-              color='orange'
-            />
-            <ApnAccordionItem
-              name='Accepted'
-              onClickHandler={onClickHandler}
-              index={1}
-              apnArr={accdApn}
-              icon='bi bi-check-circle-fill'
-              color='green'
-            />
-            <ApnAccordionItem
-              name='Completed'
-              onClickHandler={onClickHandler}
-              index={2}
-              apnArr={compdApn}
-              icon='bi bi-check2-circle'
-              color='green'
-            />
-            <ApnAccordionItem
-              name='Cancelled'
-              onClickHandler={onClickHandler}
-              index={3}
-              apnArr={cancdApn}
-              icon='bi bi-x-circle-fill'
-              color='red'
-            />
-          </Accordion>
-          {/* <Modal show={show} onHide={handleClose}>
-            <Modal.Header closeButton>
-              <Modal.Title>Modal heading</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              Woohoo, you're reading this text in a modal!
-            </Modal.Body>
-            <Modal.Footer>
-              <Button variant='secondary' onClick={handleClose}>
-                Close
-              </Button>
-              <Button variant='primary' onClick={handleClose}>
-                Save Changes
-              </Button>
-            </Modal.Footer>
-          </Modal> */}
-        </>
-      ) : (
-        <Loader />
+      <Accordion>
+        <ApnAccordionItem
+          ek={0}
+          act='Pending'
+          openApn={pendingInfoAppts}
+          openModal={openModal}
+          color={"orange"}
+          icon='bi bi-alarm'
+        />
+        <ApnAccordionItem
+          ek={1}
+          act='Accepted'
+          openApn={acceptedInfoAppts}
+          color={"navy"}
+          icon='bi bi-check2-circle'
+          openModal={openModal}
+        />
+        <ApnAccordionItem
+          ek={2}
+          act='Completed'
+          openApn={completedInfoAppts}
+          openModal={openModal}
+          color={"#556B2F"}
+          icon='bi bi-check-circle-fill'
+        />
+        <ApnAccordionItem
+          ek={3}
+          act='Cancelled'
+          openApn={canceledInfoAppts}
+          openModal={openModal}
+          color={"red"}
+          icon='bi bi-x-circle-fill'
+        />
+      </Accordion>
+      {appointmentInfo && getUserBIDInfo !== undefined && (
+        <ModalApn
+          showModal={showModal}
+          handleCloseModal={handleCloseModal}
+          userInfo={getUserBIDInfo}
+          businessInfo={businessInfo}
+          acceptAppointmentHandler={acceptAppointmentHandler}
+          appointmentInfo={appointmentInfo}
+        />
       )}
     </>
   )

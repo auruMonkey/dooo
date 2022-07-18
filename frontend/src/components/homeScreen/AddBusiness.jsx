@@ -19,7 +19,7 @@ const AddBusiness = () => {
 
       <Row className='justify-content-md-center text-center my-4'>
         {DUMMY_SERVICES_LINE.map((e) => (
-          <Col lg={1} md={6} sm={12} key={e.id} className='m-4'>
+          <Col xl={1} md={2} xs={12} key={e.id} className='m-3'>
             <Card className='addbusiness-card-card '>
               <div className='addbusiness-card-img mx-auto '>
                 <SvgIcon
@@ -31,11 +31,6 @@ const AddBusiness = () => {
                   sz='50px'
                 />
               </div>
-              {/* <Card.Img
-                className='addbusiness-card-img mx-auto '
-                variant='top'
-                src={e.image}
-              /> */}
               <Card.Body>
                 <Card.Text className='addbusiness-card-title'>
                   {e.name}

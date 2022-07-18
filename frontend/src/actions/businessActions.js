@@ -35,7 +35,6 @@ export const logoutB = () => (dispatch) => {
   dispatch({ type: "BUSINESS_LOGOUT" })
 }
 
-//logout action
 export const getBusinessById = (idBsn) => async (dispatch) => {
   try {
     const config = { headers: { "Content-type": "application/json" } }
@@ -325,38 +324,38 @@ export const deleteService = (bId, id) => async (dispatch) => {
 }
 
 // delete location information
-export const editService =
-  (bid, id, name, duration, price) => async (dispatch) => {
-    try {
-      dispatch({ type: "BUSINESS_EDIT_SERVICE_REQUEST" })
+export const editService = (bid, id, edServ) => async (dispatch) => {
+  try {
+    dispatch({ type: "BUSINESS_EDIT_SERVICE_REQUEST" })
 
-      await axios
-        .put(
-          "/api/business/service/edit",
-          { bid, id, name, duration, price },
-          {
-            headers: { "Content-type": "application/json" },
-          }
-        )
-        .then((response) => {
-          dispatch({ type: "BUSINESS_LOGIN_SUCCESS", payload: response.data })
-          dispatch({
-            type: "BUSINESS_EDIT_SERVICE_SUCCESS",
-            payload: response.data,
-          })
+    await axios
+      .put(
+        "/api/business/service/edit",
+        { bid, id, edServ },
+        {
+          headers: { "Content-type": "application/json" },
+        }
+      )
+      .then((response) => {
+        console.log(response.data)
+        dispatch({ type: "BUSINESS_LOGIN_SUCCESS", payload: response.data })
+        // dispatch({
+        //   type: "BUSINESS_EDIT_SERVICE_SUCCESS",
+        //   payload: response.data,
+        // })
 
-          localStorage.setItem("businessInfo", JSON.stringify(response.data))
-        })
-    } catch (error) {
-      dispatch({
-        type: "BUSINESS_EDIT_SERVICE_FAIL",
-        payload:
-          error.response && error.response.data.message
-            ? error.response.data.message
-            : error.message,
+        localStorage.setItem("businessInfo", JSON.stringify(response.data))
       })
-    }
+  } catch (error) {
+    dispatch({
+      type: "BUSINESS_EDIT_SERVICE_FAIL",
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    })
   }
+}
 // update business information
 export const updateScheduleBusiness =
   (bid, sid, shift, lunch, daysOff, locationSch) => async (dispatch) => {

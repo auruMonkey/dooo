@@ -47,7 +47,9 @@ const App = () => {
               <Route path='/signup/business' element={<AddBusinessScreen />} />
               <Route
                 path='/admindashboard'
-                element={<AdminDashboardScreen />}
+                element={
+                  <AdminDashboardScreen googleKey={settingsInfo[0].googlekey} />
+                }
               />
               <Route path='/admin' element={<AdminLoginScreen />} exact />
               <Route path='/addbusiness' element={<AddBusinessScreen />} />
@@ -78,12 +80,16 @@ const App = () => {
               />
               <Route
                 path='/service/:category/:id'
-                element={<BusinessDetails />}
+                element={
+                  <BusinessDetails googleKey={settingsInfo[0].googlekey} />
+                }
                 exact
               />
               <Route
                 path='/preview/:category/:id'
-                element={<BusinessPreview />}
+                element={
+                  <BusinessPreview googleKey={settingsInfo[0].googlekey} />
+                }
                 exact
               />
 

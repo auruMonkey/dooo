@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { Stack, Row, Form, FormGroup, Container, Button } from "react-bootstrap"
 import { useDispatch } from "react-redux"
 import { useNavigate } from "react-router-dom"
@@ -6,12 +6,19 @@ import { loginAdmin } from "../actions"
 import isStrongPassword from "validator/lib/isStrongPassword"
 
 const AdminLoginScreen = () => {
+  const history = useNavigate()
+
+  useEffect(() => {
+    if (window.sessionStorage.getItem("adminInfo") !== null) {
+      history("/admindashboard")
+    }
+  }, [])
+
   //const form
   const [form, setForm] = useState({ email: "", password: "" })
   const [errors, setErrors] = useState({})
 
   const dispatch = useDispatch()
-  const history = useNavigate()
   //set form's fields
   const setField = (field, value) => {
     setForm({ ...form, [field]: value })

@@ -1,15 +1,56 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { Row, Col, Dropdown, Button, Container } from "react-bootstrap"
 import { ssrso, ssrst, ssfsso, ssfsst, ssfssth } from "../strings"
+import { useSelector } from "react-redux"
 
-const FilterShow = ({ setListView, serviceLenght, categoryName }) => {
+const FilterShow = ({
+  setListView,
+  serviceLenght,
+  categoryName,
+  settingsInfo,
+  setCategoryName,
+  isSearching,
+}) => {
+  const [categoryChosenName, setCategoryNameChosen] = useState(categoryName)
+
   const [titleDM, setTitleDM] = useState(ssfsst)
+
+  useEffect(() => {
+    if (settingsInfo !== null && settingsInfo !== undefined) {
+      getFullName()
+    }
+  }, [settingsInfo, categoryName])
+
+  const getFullName = () => {
+    if (isSearching) {
+      setCategoryNameChosen("All businesses")
+      return
+    }
+    let fn = {}
+    if (settingsInfo !== undefined) {
+      fn = settingsInfo[0].mainServices.find(
+        (o) => o.shortName === categoryName
+      )
+      if (fn !== undefined) {
+        setCategoryNameChosen(fn.name)
+        setCategoryName(fn.name)
+      } else {
+        fn = settingsInfo[0].usersServices.find(
+          (o) => o.shortName === categoryName
+        )
+      }
+    }
+  }
 
   return (
     <Container>
       <Row style={{ color: "black" }} className='my-3'>
         <Col lg={6} md={6} sm={12}>
-          <span>{`${ssrso}${serviceLenght} ${ssrst}${categoryName}`}</span>
+          {categoryName === undefined ? (
+            <span>Pick a Category</span>
+          ) : (
+            <span>{`${ssrso}${serviceLenght} ${ssrst}${categoryChosenName}`}</span>
+          )}
         </Col>
         <Col lg={6} md={6} sm={12} className='d-flex justify-content-end'>
           <Row>

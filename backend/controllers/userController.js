@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken"
 import User from "../models/userModel.js"
 import Business from "../models/businessModel.js"
 import Appointment from "../models/appointmentModels.js"
-import "../middleware/authMiddleware.js"
+// import "../middleware/authMiddleware.js"
 
 //generate token
 const generateToken = (id) => {
@@ -76,8 +76,8 @@ const registerUser = asyncHandler(async (req, res) => {
     password: password,
     phone: phoneNumber,
     avatar: {
-      path: "https://res.cloudinary.com/deveke/image/upload/v1653260552/xddpnrsnogieb1scfqdz.png",
-      filename: "xddpnrsnogieb1scfqdz",
+      path: "https://res.cloudinary.com/deveke/image/upload/v1657498917/jv7ybs6piumrxjlbyqau.png",
+      filename: "jv7ybs6piumrxjlbyqau",
     },
     joined: new Date(),
     appointments: [],
@@ -110,4 +110,39 @@ const getAppts = asyncHandler(async (req, res) => {
   res.json({ newArr, newArrBus })
 })
 
-export { getUsers, registerUser, authUser, updateUser, getAppts }
+const userById = asyncHandler(async (req, res) => {
+  const { idUsr } = req.body
+  console.log(idUsr)
+  const user = await User.findById({ _id: idUsr })
+
+  res.json(user)
+})
+
+//@desc  get user appointment
+const updateAppts = asyncHandler(async (req, res) => {
+  const { aid, services, location, date } = req.body
+  const updatedAppt = await Appointment.findByIdAndUpdate(
+    { _id: aid },
+    {
+      location: {
+        address: location.address,
+        latitude: location.latitude,
+        longitude: location.latitude,
+      },
+      datetime: date,
+      services: services,
+    }
+  )
+
+  res.json(updatedAppt)
+})
+
+export {
+  getUsers,
+  registerUser,
+  authUser,
+  updateUser,
+  getAppts,
+  updateAppts,
+  userById,
+}

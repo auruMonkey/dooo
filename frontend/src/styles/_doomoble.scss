@@ -128,8 +128,9 @@
   margin-top: 3rem;
   margin-bottom: 4rem;
   color: $white;
+  border: $white 0.05rem solid;
   &:hover {
-    background-color: transparent;
+    background-color: $orange;
     color: $white;
   }
 }
@@ -154,7 +155,7 @@
 }
 .addbusiness-card-title {
   color: $white;
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: 400;
 }
 .maphs-main {
@@ -481,4 +482,12 @@
     cursor: pointer;
     background: $orange;
   }
+}
+.modal-inactive {
+  background-color: none;
+}
+.modal-active {
+  background-color: white;
+  opacity: 0.6;
+  pointer-events: none;
 }

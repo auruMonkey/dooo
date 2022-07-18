@@ -50,7 +50,7 @@ const PageHeader = ({ businessInfo }) => {
   return (
     <Container>
       <Row>
-        <Col xl={2} md={2} xs={4}>
+        <Col xl={2} md={2} xs={12}>
           <h6 className='text-dark my-3'>
             <strong>{`Welcome, ${businessInfo && businessInfo.name}`}</strong>
           </h6>
@@ -58,7 +58,7 @@ const PageHeader = ({ businessInfo }) => {
         <Col
           xl={2}
           md={2}
-          xs={4}
+          xs={12}
           className='col-4 d-flex flex-row border  border-1 rounded w-auto p-3 my-2'
           as='h6'
           style={{ color: "black" }}
@@ -82,7 +82,7 @@ const PageHeader = ({ businessInfo }) => {
           )}
         </Col>
 
-        <Col xl={2} md={2} xs={4} className='my-auto'>
+        <Col xl={2} md={2} xs={5} className='my-auto'>
           <div className='form-check form-switch my-auto'>
             <input
               className='form-check-input border rounded p-2 mt-3'
@@ -90,14 +90,16 @@ const PageHeader = ({ businessInfo }) => {
               role='switch'
               id='publishCheck'
               checked={approved}
-              onChange={() => setShow(true)}
+              onChange={() => {
+                !approved ? setShow(true) : setShow(false)
+              }}
             />
             <span style={{ fontSize: "0.9rem", color: "black" }}>
               Click to publish your page
             </span>
           </div>
         </Col>
-        <Col xl={3} md={3} xs={4} className='my-4 h-100'>
+        <Col xl={3} md={3} xs={12} className='my-4 h-100'>
           <ButtonShadow
             text='Click to preview page'
             color='#1976D2'
@@ -105,7 +107,7 @@ const PageHeader = ({ businessInfo }) => {
             handleOnClick={clickPreviewHandler}
           />
         </Col>
-        <Col xl={3} md={3} xs={4}>
+        <Col xl={3} md={3} xs={12}>
           <Row className='my-3'>
             <Col
               as='button'
@@ -118,7 +120,7 @@ const PageHeader = ({ businessInfo }) => {
             >
               <i className='fa-solid fa-angle-left'></i>
             </Col>
-            <Col lg={10} md={10} sm={10}>
+            <Col lg={10} md={10} sm={7}>
               <strong>
                 {location.length > 0 && location[idLocation].address}
               </strong>

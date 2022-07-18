@@ -122,3 +122,60 @@ export const getAppointments = (appts) => async (dispatch) => {
     })
   }
 }
+
+//get update appointment
+
+export const updateAppointment =
+  (aid, apptServices, apptLocation, apptDateTime) => async (dispatch) => {
+    try {
+      await axios
+        .post(
+          "/api/users/appts/update",
+          {
+            aid: aid,
+            services: apptServices,
+            location: apptLocation,
+            date: apptDateTime,
+          },
+          {
+            headers: { "Content-type": "application/json" },
+          }
+        )
+        .then((response) => {
+          dispatch({
+            type: "UPDATE_USER_APPOINTMENTS_SUCCESS",
+            payload: response.data,
+          })
+        })
+    } catch (error) {
+      dispatch({
+        type: "UPDATE_USER_APPOINTMENTS_FAIL",
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      })
+    }
+  }
+
+export const getUserById = (idUsr) => async (dispatch) => {
+  try {
+    await axios
+      .post(
+        "/api/users/id",
+        { idUsr },
+        { headers: { "Content-type": "application/json" } }
+      )
+      .then((response) => {
+        dispatch({ type: "GET_USER_BY_ID_SUCCESS", payload: response.data })
+      })
+  } catch (error) {
+    dispatch({
+      type: "GET_USER_BY_ID_FAIL",
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    })
+  }
+}

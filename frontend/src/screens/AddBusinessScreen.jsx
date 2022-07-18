@@ -27,7 +27,7 @@ const AddBusinessScreen = () => {
   const [address, setAddress] = useState()
   const [addOther, showAddOther] = useState(false)
 
-  Geocode.setApiKey("AIzaSyDXSd1rUGhNijPa_Sbi1Qc5VqCBwsUyXWY")
+  Geocode.setApiKey(settingsInfo.googlekey)
 
   //work with browser url
   const history = useNavigate()
@@ -183,20 +183,6 @@ const AddBusinessScreen = () => {
     }
   }
 
-  const formRender = (label, type, fdn, en) => {
-    return (
-      <Form.Group className='my-3'>
-        <Form.Label className='sgnup-form-label'>{label}</Form.Label>
-        <Form.Control
-          type={type}
-          onChange={(e) => setField(fdn, e.target.value)}
-          isInvalid={!!en}
-        />
-        <Form.Control.Feedback type='invalid'>{en}</Form.Control.Feedback>
-      </Form.Group>
-    )
-  }
-
   //main return
   return (
     <Stack direction='vertical' className='bg-white'>
@@ -210,19 +196,58 @@ const AddBusinessScreen = () => {
             <div className='text-center'>
               <h6 className='text-dark text-capitalize mt-5'>{`Create Business Account`}</h6>
             </div>
+
             {/* ********Full name********* */}
-            {formRender(abstr[0], "text", "name", errors.name)}
+            <Form.Group className='my-3'>
+              <Form.Label className='sgnup-form-label'>{abstr[0]}</Form.Label>
+              <Form.Control
+                type='text'
+                onChange={(e) => setField("name", e.target.value)}
+                isInvalid={!!errors.name}
+              />
+              <Form.Control.Feedback type='invalid'>
+                {errors.name}
+              </Form.Control.Feedback>
+            </Form.Group>
             {/* ********Email********* */}
-            {formRender(abstr[1], "email", "email", errors.email)}
+            <Form.Group className='my-3'>
+              <Form.Label className='sgnup-form-label'>{abstr[1]}</Form.Label>
+              <Form.Control
+                type='email'
+                onChange={(e) => setField("email", e.target.value)}
+                isInvalid={!!errors.email}
+              />
+              <Form.Control.Feedback type='invalid'>
+                {errors.email}
+              </Form.Control.Feedback>
+            </Form.Group>
+
             {/* ********Password********* */}
-            {formRender(abstr[2], "password", "password", errors.password)}
+            <Form.Group className='my-3'>
+              <Form.Label className='sgnup-form-label'>{abstr[2]}</Form.Label>
+              <Form.Control
+                type='password'
+                onChange={(e) => setField("password", e.target.value)}
+                isInvalid={!!errors.password}
+              />
+              <Form.Control.Feedback type='invalid'>
+                {errors.password}
+              </Form.Control.Feedback>
+            </Form.Group>
+
             {/* ********Confirm Password********* */}
-            {formRender(
-              abstr[3],
-              "password",
-              "confpassword",
-              errors.confpassword
-            )}
+            <Form.Group className='my-3'>
+              <Form.Label className='sgnup-form-label'>{abstr[3]}</Form.Label>
+              <Form.Control
+                type='password'
+                onChange={(e) => setField("password", e.target.value)}
+                isInvalid={!!errors.confpassword}
+              />
+              <Form.Control.Feedback type='invalid'>
+                {errors.confpassword}
+              </Form.Control.Feedback>
+            </Form.Group>
+
             {/* ********Phone Number********* */}
             <Form.Group className='my-3'>
               <Form.Label className='sgnup-form-label'>{abstr[4]}</Form.Label>
@@ -241,7 +266,17 @@ const AddBusinessScreen = () => {
               </Form.Control.Feedback>
             </Form.Group>
             {/* ********Business name********* */}
-            {formRender(abstr[5], "text", "businessname", errors.businessname)}
+            <Form.Group className='my-3'>
+              <Form.Label className='sgnup-form-label'>{abstr[5]}</Form.Label>
+              <Form.Control
+                type='text'
+                onChange={(e) => setField("businessname", e.target.value)}
+                isInvalid={!!errors.businessname}
+              />
+              <Form.Control.Feedback type='invalid'>
+                {errors.businessname}
+              </Form.Control.Feedback>
+            </Form.Group>
 
             {/* ********Business category********* */}
             <Form.Group className='my-3'>
@@ -288,7 +323,7 @@ const AddBusinessScreen = () => {
                 <Col lg={8} md={8} sm={12}>
                   <Autocomplete
                     className='w-100 rounded'
-                    placeholder='Street Adress'
+                    placeholder='Street Address'
                     style={
                       errors.address
                         ? { border: "0.05rem solid #c00", height: "2.4rem" }

@@ -1,11 +1,22 @@
 import React, { useState, useEffect } from "react"
 import { useSelector, useDispatch } from "react-redux"
-import { Col, Row, Button, Modal, Form, ListGroup } from "react-bootstrap"
+import {
+  Col,
+  Row,
+  Button,
+  Modal,
+  Form,
+  ListGroup,
+  Toast,
+  CloseButton,
+} from "react-bootstrap"
 import { Loader } from "../../components"
 import { updateScheduleBusiness } from "../../actions/businessActions"
 const BusinessSchedule = () => {
   // *********** work with modal window
   const [showModal, setShowModal] = useState(false)
+  const [show, setShow] = useState(false)
+  const [toastText, setToastText] = useState("")
   const [openSch, setOpenSch] = useState()
   const [scheduleId, setScheduleId] = useState()
   const [locationSch, setLocationSch] = useState({})
@@ -14,12 +25,12 @@ const BusinessSchedule = () => {
   // *********** check days off
   const [daysOff, setDaysOff] = useState([])
   const defaultH = {
-    starthour: "0",
-    startmin: "00",
-    starttd: "AM",
-    endhour: "0",
-    endmin: "00",
-    endtd: "AM",
+    starthour: "",
+    startmin: "",
+    starttd: "",
+    endhour: "",
+    endmin: "",
+    endtd: "",
   }
   // *********** for select schedule
   const [shift, setShift] = useState({ defaultH })
@@ -57,16 +68,58 @@ const BusinessSchedule = () => {
   const { businessInfo, loading } = useSelector((state) => state.businessLogin)
   // *********** set schedule handler
   const setScheduleHandler = () => {
-    dispatch(
-      updateScheduleBusiness(
-        businessInfo._id,
-        scheduleId,
-        shift,
-        lunch,
-        daysOff,
-        locationSch
-      )
-    )
+    console.log(lunch)
+    let startTime = Number(shift.starthour) + Number(shift.startmin) / 60
+    let endTime = Number(shift.endhour) + Number(shift.endmin) / 60
+    let lunchStartTime = Number(lunch.starthour) + Number(lunch.startmin) / 60
+    let lunchEndTime = Number(lunch.endhour) + Number(lunch.endmin) / 60
+
+    if (!shift.starttd || !shift.endtd) {
+      setToastText("Please select AM or PM")
+      setShow(true)
+      return
+    } else {
+      if (shift.starttd === "PM" && shift.starthour !== "12") {
+        startTime += 12
+      }
+      if (shift.endtd === "PM" && shift.endhour !== "12") {
+        endTime += 12
+      }
+      if (endTime < startTime) {
+        setToastText("End time must be earlier then start time")
+        setShow(true)
+        return
+      }
+    }
+    if (!lunch.starttd || !lunch.endtd) {
+      setToastText("Please select AM or PM")
+      setShow(true)
+      return
+    } else {
+      if (lunch.starttd === "PM" && lunch.starthour !== "12") {
+        lunchStartTime += 12
+      }
+      if (lunch.endtd === "PM" && lunch.endhour !== "12") {
+        lunchEndTime += 12
+      }
+      if (lunchEndTime < lunchStartTime) {
+        setToastText("End time must be earlier then start time")
+        setShow(true)
+        return
+      }
+      console.log(lunchEndTime)
+      console.log(lunchStartTime)
+    }
+    // dispatch(
+    //   updateScheduleBusiness(
+    //     businessInfo._id,
+    //     scheduleId,
+    //     shift,
+    //     lunch,
+    //     daysOff,
+    //     locationSch
+    //   )
+    // )
     setShift(defaultH)
     setLunch(defaultH)
     setDaysOff([])
@@ -235,9 +288,16 @@ const BusinessSchedule = () => {
                     <p>
                       <strong>Days Off</strong>
                     </p>
-                    {s.daysoff.daysOff.map((i) => (
-                      <span className='border rounded p-2 me-2'>{`Off ${i} `}</span>
-                    ))}
+                    <Row>
+                      {s.daysoff.daysOff.map((i, index) => (
+                        <Col xs={12} md={6} lg={4} className='my-3' key={index}>
+                          <span
+                            style={{ fontSize: "0.9rem" }}
+                            className='border rounded p-2 me-2'
+                          >{`Off ${i} `}</span>
+                        </Col>
+                      ))}
+                    </Row>
                   </div>
                   <hr />
                 </>
@@ -424,7 +484,7 @@ const BusinessSchedule = () => {
                   <input
                     className='schedule-form-check-input form-check-input ms-4'
                     type='checkbox'
-                    checked={isLunch}
+                    defaultChecked={isLunch}
                     name='flexRadioDefault'
                     id='addlunch'
                     onClick={() => setIsLunch(!isLunch)}
@@ -464,7 +524,11 @@ const BusinessSchedule = () => {
                           <Form.Group className='mt-3'>
                             <Form.Select
                               value={
-                                lunch.startmin !== "00" ? lunch.startmin : "00"
+                                lunch.startmin === undefined
+                                  ? "00"
+                                  : lunch.startmin !== "00"
+                                  ? lunch.startmin
+                                  : "00"
                               }
                               onChange={(e) =>
                                 setLunch((prev) => ({
@@ -629,6 +693,25 @@ const BusinessSchedule = () => {
           </Modal.Footer>
         </div>
       </Modal>
+
+      <div className='toast-container position-fixed bottom-0 end-0 p-3'>
+        <Toast onClose={() => setShow(false)} show={show} delay={3000} autohide>
+          <div className='my-auto bg-white text-dark border-0 rounded p-3'>
+            <i
+              className='bi bi-exclamation-circle-fill me-3'
+              style={{ color: "red" }}
+            ></i>
+            <strong>{toastText}</strong>
+            <div className='text-end'>
+              <CloseButton
+                variant='white'
+                onClick={() => setShow(false)}
+                aria-label='Close'
+              />
+            </div>
+          </div>
+        </Toast>
+      </div>
     </>
   )
 }

@@ -5,7 +5,7 @@ import { LinkContainer } from "react-router-bootstrap"
 import validator from "validator"
 import NumberFormat from "react-number-format"
 import { useNavigate, useLocation } from "react-router-dom"
-import { register } from "../actions/userActions"
+import { register, sendEmail } from "../actions"
 
 const SignupScreen = () => {
   //const form
@@ -65,7 +65,7 @@ const SignupScreen = () => {
     } else if (password.length < 6) {
       newErrors.password = "Please enter correct password 6 characters long"
     } else if (password !== confpassword) {
-      newErrors.confpassword = "Password not mutch"
+      newErrors.confpassword = "Password don't mutch"
     }
 
     //check phone number
@@ -84,8 +84,18 @@ const SignupScreen = () => {
     if (Object.keys(formErrors).length > 0) {
       setErrors(formErrors)
     } else {
-      history(-1)
+      history("/")
       dispatch(register(form.name, form.email, form.password, form.phonenumber))
+      dispatch(
+        sendEmail({
+          name: form.name,
+          phnub: form.phonenumber,
+          email: form.email,
+          message: "Thanks for joining us",
+          to: form.email,
+          subject: `DooMoble`,
+        })
+      )
     }
   }
 

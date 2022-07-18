@@ -20,8 +20,8 @@ import {
 } from "../controllers/businessController.js"
 
 router.route("/").post(registerBusiness)
-router.route("/appointment").post(getBusinessApnById)
 router.route("/appointment/accept").post(acceptBusinessApnById)
+router.route("/appointment").post(getBusinessApnById)
 router.route("/id").post(businessById)
 router.route("/makeapp").post(makeAppointment)
 router.route("/all").post(getBusinesses)

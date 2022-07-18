@@ -6,6 +6,7 @@ const ButtonShadow = ({
   handleOnClick,
   color = "darkgray",
   icon,
+  fsize = "1rem",
   bgcolor = "transparent",
 }) => {
   return (
@@ -14,6 +15,7 @@ const ButtonShadow = ({
       variant='secondary  '
       onClick={handleOnClick}
       style={{
+        fontSize: fsize,
         background: bgcolor,
         color: color,
         fontWeight: "600",

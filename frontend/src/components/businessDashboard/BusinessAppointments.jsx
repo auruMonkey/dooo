@@ -5,12 +5,23 @@ import { getBusinessApnById } from "../../actions"
 
 const BusinessAppointments = ({ businessInfo }) => {
   const dispatch = useDispatch()
-  const { businessApnInfo } = useSelector((state) => state.getBusinessApnById)
 
   useEffect(() => {
-    dispatch(getBusinessApnById(businessInfo.appointments))
+    // dispatch(getBusinessApnById(businessInfo.appointments))
   }, [])
-  return <ApnAccordion businessApnInfo={businessApnInfo} />
+
+  const { businessApnInfo } = useSelector((state) => state.getBusinessApnById)
+
+  return (
+    <>
+      {businessApnInfo !== undefined && (
+        <ApnAccordion
+          businessInfo={businessInfo}
+          businessApnInfo={businessApnInfo}
+        />
+      )}
+    </>
+  )
 }
 
 export default BusinessAppointments

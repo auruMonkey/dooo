@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { Row } from "react-bootstrap"
-import { to24Format, HoursCell, RendMinutes, checkLunchTime } from "./Utils"
+import { to24Format, HoursCell, RendMinutes, checkLunchTime } from "./UtilsUD"
 
 const HourSelector = ({
   location,

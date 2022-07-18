@@ -17,9 +17,9 @@ export const loginAdmin = (email, password) => async (dispatch) => {
       )
       .then((response) => {
         dispatch({ type: "ADMIN_LOGIN_SUCCESS", payload: response.data })
+        sessionStorage.setItem("adminInfo", JSON.stringify(response.data))
       })
 
-    // localStorage.setItem("userInfo", JSON.stringify(data))
     // localStorage.removeItem("businessInfo")
   } catch (error) {
     dispatch({
@@ -77,6 +77,29 @@ export const deleteMember = (name, id, keyword, bid) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: "ADMIN_DELETE_FAIL",
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    })
+  }
+}
+
+//login action
+export const approveBusiness = (id) => async (dispatch) => {
+  try {
+    await axios
+      .post(
+        "/api/admin/approve",
+        { id },
+        { headers: { "Content-type": "application/json" } }
+      )
+      .then((response) => {
+        dispatch({ type: "ADMIN_APPROVE_SUCCESS", payload: response.data })
+      })
+  } catch (error) {
+    dispatch({
+      type: "ADMIN_APPROVE_FAIL",
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

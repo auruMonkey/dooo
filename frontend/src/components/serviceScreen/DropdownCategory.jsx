@@ -4,7 +4,13 @@ import { useNavigate } from "react-router-dom"
 import { Dropdown } from "react-bootstrap"
 import { Loader, Message } from "../../components"
 
-const DropdownCategory = ({ category, setUserServices, setCategoryName }) => {
+const DropdownCategory = ({
+  category,
+  setUserServices,
+  setCategoryName,
+  categoryName,
+  isSearching,
+}) => {
   const [categoryChosenName, setCategoryNameChosen] = useState(category)
   const [categoryChosen, setCategoryChosen] = useState(category)
   const [allServices, setAllServices] = useState([])
@@ -21,10 +27,16 @@ const DropdownCategory = ({ category, setUserServices, setCategoryName }) => {
     }
   }, [category, settingsInfo])
 
+  useEffect(() => {
+    if (settingsInfo !== null && settingsInfo !== undefined) {
+      setCategoryNameChosen("Pick a Category")
+    }
+  }, [isSearching])
+
   const getFullName = () => {
     let fn = {}
     if (settingsInfo !== undefined) {
-      if (category === undefined) {
+      if (category === undefined || categoryName === undefined) {
         setCategoryName("allbusinesses")
         setCategoryNameChosen("Pick a Category")
       } else {
@@ -35,9 +47,10 @@ const DropdownCategory = ({ category, setUserServices, setCategoryName }) => {
           fn = settingsInfo[0].usersServices.find(
             (o) => o.shortName === category
           )
-          setCategoryNameChosen(fn.name)
+          // setCategoryNameChosen(fn.name)
         }
-        setCategoryName(fn.name)
+
+        // setCategoryName(fn.name)
       }
     }
   }

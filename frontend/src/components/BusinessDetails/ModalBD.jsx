@@ -12,7 +12,7 @@ import {
   DataSelectBD,
 } from "../BusinessDetails"
 import { Loader } from "../../components"
-import { makeAppointment } from "../../actions/serviceActions"
+import { makeAppointment, sendEmail } from "../../actions"
 
 const ModalBD = ({ showModal, handleCloseModal }) => {
   const [loading, setLoading] = useState(true)
@@ -36,7 +36,9 @@ const ModalBD = ({ showModal, handleCloseModal }) => {
   const { service } = useSelector((state) => state.serviceDetails)
 
   useEffect(() => {
-    if (userInfo !== undefined && service !== undefined) {
+    console.log(service)
+    console.log(userInfo)
+    if (userInfo && service !== undefined) {
       setBusinessInfo({
         name: service.businessName,
         avatar: service.avatar.path,
@@ -96,6 +98,16 @@ const ModalBD = ({ showModal, handleCloseModal }) => {
           apptLocation,
           dateString
         )
+      )
+      dispatch(
+        sendEmail({
+          name: service.name,
+          phnub: service.phonenumber,
+          email: service.email,
+          message: `Hi ${service.businessName}, Congratulations ${userInfo.name} has booked your services. Please login to your dashboard to confirm the scheduled appointment. Go to Dashboard (a button that is hyperlinked)`,
+          to: service.email,
+          subject: `DooMoble`,
+        })
       )
       history(0)
     } else {

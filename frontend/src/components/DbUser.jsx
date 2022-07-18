@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react"
-import { useSelector } from "react-redux"
+import { useSelector, useDispatch } from "react-redux"
 import { LinkContainer } from "react-router-bootstrap"
-import { useNavigate, useLocation } from "react-router-dom"
+import { useLocation } from "react-router-dom"
 
 import {
   Container,
@@ -11,6 +11,13 @@ import {
   Button,
   ButtonGroup,
 } from "react-bootstrap"
+
+import {
+  getAppointments,
+  cancelAppointmentById,
+  updateAppointment,
+} from "../actions"
+
 import {
   AccountManager,
   MyCalendar,
@@ -18,15 +25,42 @@ import {
 } from "../components/userDashborad"
 
 const DbUser = () => {
-  const [btnsState, setBtnsState] = useState(3)
-
-  //slicer for user info
+  const [appts, setAppts] = useState()
+  const dispatch = useDispatch()
+  //slicers
   const { userInfo } = useSelector((state) => state.userLogin)
+  const { succes } = useSelector((state) => state.cancelAppointment)
+
+  useEffect(() => {
+    dispatch(getAppointments(userInfo.appointments))
+  }, [])
+
+  const { apptsInfo, error, loading } = useSelector(
+    (state) => state.userAppointment
+  )
+  useEffect(() => {
+    if (apptsInfo !== undefined) {
+      setAppts({ apptsInfo, error, loading })
+    }
+  }, [apptsInfo])
+
   //work with browser url
-  const history = useNavigate()
   const urlLocation = useLocation()
 
   const typeOfPage = urlLocation.pathname.split("/")[2]
+
+  const cancelAppointment = (id) => {
+    dispatch(cancelAppointmentById(id))
+    dispatch(getAppointments(userInfo.appointments))
+  }
+  const updateAppointmentHandler = (apt) => {
+    dispatch(
+      updateAppointment(apt._id, apt.services, apt.location, apt.datetime)
+    )
+    dispatch(getAppointments(userInfo.appointments))
+    // const updatingAppts = (aid, apptServices, apptLocation, td) => {
+  }
+
   return (
     <Stack className='m-0 vh-80'>
       <Container>
@@ -70,9 +104,17 @@ const DbUser = () => {
           </Col>
           <Col lg={9} md={7} sm={12} className='my-4 px-4'>
             {typeOfPage === "manage" ? (
-              <ManageAppointment />
+              appts !== undefined &&
+              userInfo && (
+                <ManageAppointment
+                  appts={appts}
+                  userInfo={userInfo}
+                  cancelAppointment={cancelAppointment}
+                  updateAppointmentHandler={updateAppointmentHandler}
+                />
+              )
             ) : typeOfPage === "calendar" ? (
-              <MyCalendar />
+              appts !== undefined && <MyCalendar appts={appts} />
             ) : (
               <AccountManager />
             )}

@@ -10,11 +10,11 @@ const ShowCategory = ({ listView, services, setServiceLenght }) => {
   }, [])
   return (
     <Container>
-      {services !== undefined ? (
+      {services !== undefined && services !== null ? (
         !listView ? (
           <Row>
-            {services.businesses.map((service) => (
-              <Col key={service._id} sm={12} md={6} lg={4} xlg={3}>
+            {services.businesses.map((service, index) => (
+              <Col key={index} sm={12} md={6} lg={4} xlg={3}>
                 <Service service={service} />
               </Col>
             ))}
